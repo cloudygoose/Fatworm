@@ -1,0 +1,53 @@
+package fatworm.executor;
+
+import org.antlr.runtime.tree.CommonTree;
+import fatworm.table.*;
+import fatworm.log.Log;
+import fatworm.type.*;
+import fatworm.expression.*;
+
+public class InsertValuesExecutor extends Executor {
+	CommonTree tree;
+	fatworm.driver.Statement statement; 
+	public InsertValuesExecutor(CommonTree t, fatworm.driver.Statement s) {
+		tree = t;
+		statement = s;
+	}
+	public void execute() throws Exception {
+		String tableName = tree.getChild(0).getText();
+		TableCursor table = statement.getConnection().getDatabaseMgr()
+				.currentTableMgr.getTable(tableName).getTableCursor();
+		
+		table.open();
+		
+		CommonTree values = (CommonTree)(tree.getChild(1));
+		Tuple tuple = new Tuple();
+		for (int i = 0;i < values.getChildCount();i++) {
+			CommonTree value = (CommonTree)(values.getChild(i));
+			Column c = table.getSchema().getColumn(i);
+			FatType v;
+			if (isDefault(value) || isNull(value)) {
+				v = c.getDefault();
+				if (v == null) {
+					if (c.getAutoIncrement()) {
+						v = c.getAutoValueAfterInc();
+					}
+				}
+			} else
+			{
+				Expression exp = statement.getConnection().logicPlanner.
+						translateExpression(value);
+				v = exp.evaluate();
+			}
+			//Log.v(v.getPrint(0));
+			tuple.addColumn(new TupleColumn(tableName, c.getName(), 
+					c.getType().newInstance(v)));
+		}
+		
+		table.insert(tuple);
+		table.addTupleNumber(1);
+		//table.next();
+		//Log.v(table.getTuple().getPrint());
+		table.close();
+	}
+}
