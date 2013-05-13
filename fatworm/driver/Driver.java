@@ -46,7 +46,15 @@ public class Driver implements java.sql.Driver{
 		try {
 			Driver d = new Driver();
 			java.sql.DriverManager.registerDriver(d);
-			//d.test();
+			try {
+				d.test();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (SQLException e) {
 			throw new RuntimeException("Can't register driver!");
 		}
@@ -99,8 +107,13 @@ public class Driver implements java.sql.Driver{
 		stmt.execute("insert into test values (1, 'aa')");
 		stmt.execute("insert into test values (3, 'aa')");
 		stmt.execute("insert into test (a) values(2)");
-		stmt.execute("update test set a=5");
-		stmt.execute("select * from test");
+		stmt.execute("insert into test values (1, 'aa')");
+		stmt.execute("insert into test values (3, 'aa')");
+		stmt.execute("insert into test (a) values(2)");
+		stmt.execute("insert into test values (1, 'aa')");
+		stmt.execute("insert into test values (3, 'aa')");
+		stmt.execute("insert into test (a) values(2)");
+		stmt.execute("select * from test order by a");
 		//		stmt.execute("insert into test2 (select * from test)");
 //		stmt.execute("select * from test2");
 //		stmt.execute("insert into test (select * from test)");

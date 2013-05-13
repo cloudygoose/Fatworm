@@ -10,6 +10,11 @@ public class PageId implements Comparable, Serializable {
 	protected String fileName;
 	protected Integer id;
 	protected Table table;
+	public PageId(String fs, int i) {
+		fileName = fs;
+		id = i;
+		table = null;
+	}
 	public PageId(String fs, int i, Table t) {
 		fileName = fs;
 		id = i;
