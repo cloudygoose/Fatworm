@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import fatworm.driver.Driver;
+import fatworm.log.Log;
 import fatworm.table.*;
 //RandomAccessTemporalFile
 public class RATFileCursor {
@@ -45,7 +46,7 @@ public class RATFileCursor {
 		cursor.nowBlock = null;
 		//begins at 0
 		cursor.nowB = newTId / (Driver.BLOCKLENGTH / tupleLength);
-		cursor.nowP = (newTId - nowB * (Driver.BLOCKLENGTH / tupleLength)) * tupleLength;
+		cursor.nowP = (newTId - cursor.nowB * (Driver.BLOCKLENGTH / tupleLength)) * tupleLength;
 		return cursor;
 	}
 	public void insertTuple(byte[] b) {
@@ -60,7 +61,7 @@ public class RATFileCursor {
 	}
 	public void forward() {
 		nowP += tupleLength;
-		if (nowP >= Driver.BLOCKLENGTH) {
+		if (nowP + tupleLength > Driver.BLOCKLENGTH) {
 			nowB++;
 			nowP = 0;
 			nowBlock = null;

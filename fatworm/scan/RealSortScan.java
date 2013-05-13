@@ -27,7 +27,7 @@ public class RealSortScan extends SortScan {
 		mainCursor = new RATFileCursor(exT.getByteArrayLength(),
 				connection);
 		mainCursor.newFileInit();
-		int tupleNum = 0;
+		tupleNum = 0;
 		source.open();
 		while (source.next()) {
 			mainCursor.insertTuple(source.getTuple().getByteArray());
@@ -40,13 +40,15 @@ public class RealSortScan extends SortScan {
 		RATFileCursor cursorJ;
 		for (int i = 0;i < tupleNum - 1;i++) {
 			cursorJ = cursorI.getCursor(i + 1);
-			Tuple ti = exT.getTupleFromByteArray(cursorI.getTypleArray());
 			for (int j = i + 1;j < tupleNum;j++) {
+				Tuple ti = exT.getTupleFromByteArray(cursorI.getTypleArray());
 				Tuple tj = exT.getTupleFromByteArray(cursorJ.getTypleArray());
 				if (comparator.bigger(tj, ti))
 				{
 					cursorI.insertTuple(tj.getByteArray());
+//					Log.v("ti now" +  exT.getTupleFromByteArray(cursorI.getTypleArray()).getPrint());
 					cursorJ.insertTuple(ti.getByteArray());
+//					Log.v("tj now" +  exT.getTupleFromByteArray(cursorJ.getTypleArray()).getPrint());
 				}
 				cursorJ.forward();
 			}
@@ -68,7 +70,6 @@ public class RealSortScan extends SortScan {
 	}
 	@Override
 	public boolean next() {
-		Log.v("!!real!!");
 		nextT = null;
 		if (iter + 1 < tupleNum) {
 			iter++;
