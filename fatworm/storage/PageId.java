@@ -10,10 +10,12 @@ public class PageId implements Comparable, Serializable {
 	protected String fileName;
 	protected Integer id;
 	protected Table table;
-	public PageId(String fs, int i) {
+	transient protected RandomAccessFile file;
+	public PageId(String fs, int i, RandomAccessFile f) {
 		fileName = fs;
 		id = i;
 		table = null;
+		file = f;
 	}
 	public PageId(String fs, int i, Table t) {
 		fileName = fs;
@@ -27,7 +29,10 @@ public class PageId implements Comparable, Serializable {
 		return id;
 	}
 	public RandomAccessFile getFile() {
-		return table.getFile();
+		if (table != null)
+			return table.getFile();
+		else //only for RATFileCursor access, because the RATFileCursor don't new a Table
+			return file;
 	}
 	@Override
 	public int compareTo(Object o) {

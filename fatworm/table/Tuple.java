@@ -34,6 +34,15 @@ public class Tuple {
 			t.addColumn(tupleColumns.get(i));
 		return t;
 	}
+	public Tuple getTupleFromByteArray(byte[] b) {
+		ByteBuffer bb = ByteBuffer.wrap(b);
+		Tuple t = new Tuple();
+		for (int i = 0;i < tupleColumns.size();i++) {
+			FatType f = tupleColumns.get(i).getValue().newInstanceFromByteBuffer(bb);
+			t.addColumn(new TupleColumn(tupleColumns.get(i).getTableName(), tupleColumns.get(i).getColumnName(), f));
+		}
+		return t;
+	}
 	/*
 	public FatType findById(IdExpression id) {
 		for (int i = 0;i < tupleColumns.size();i++)

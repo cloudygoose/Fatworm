@@ -36,7 +36,7 @@ public class OrderScan extends Scan {
 	}
 	@Override
 	public void open() throws Exception {
-		sortScan = new SortScan(source, ascList, idList);
+		sortScan = new RealSortScan(source, ascList, idList, connection);
 		sortScan.open();
 		nextT = null;
 	}

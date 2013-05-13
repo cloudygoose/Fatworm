@@ -21,7 +21,7 @@ public class DistinctScan extends Scan {
 	}
 	@Override
 	public void open() throws Exception {
-		sortedSource = new SortScan(source, null, null);
+		sortedSource = new RealSortScan(source, null, null, connection);
 		sortedSource.open();
 		last = null;
 	}

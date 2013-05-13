@@ -41,6 +41,7 @@ public class RATFileCursor {
 		RATFileCursor cursor = new RATFileCursor(tupleLength, connection);
 		cursor.tupleId = newTId;
 		cursor.fileName = fileName;
+		cursor.file = file;
 		cursor.nowBlock = null;
 		//begins at 0
 		cursor.nowB = newTId / (Driver.BLOCKLENGTH / tupleLength);
@@ -48,13 +49,13 @@ public class RATFileCursor {
 		return cursor;
 	}
 	public void insertTuple(byte[] b) {
-		if (!nowBlock.inBuffer() || nowBlock == null)
-			nowBlock = connection.bufferManager.getPage(new PageId(fileName, nowB));
+		if (nowBlock == null || !nowBlock.inBuffer())
+			nowBlock = connection.bufferManager.getPage(new PageId(fileName, nowB, file));
 		nowBlock.putBytes(b, nowP);
 	}
 	public byte[] getTypleArray() {
-		if (!nowBlock.inBuffer() || nowBlock == null)
-			nowBlock = connection.bufferManager.getPage(new PageId(fileName, nowB));
+		if (nowBlock == null || !nowBlock.inBuffer())
+			nowBlock = connection.bufferManager.getPage(new PageId(fileName, nowB, file));
 		return nowBlock.getBytes(nowP, tupleLength);
 	}
 	public void forward() {
@@ -75,8 +76,15 @@ public class RATFileCursor {
 		}
 		tupleId--;
 	}
+	public void set(int newTId) {
+		nowBlock = null;
+		//begins at 0
+		nowB = newTId / (Driver.BLOCKLENGTH / tupleLength);
+		nowP = (newTId - nowB * (Driver.BLOCKLENGTH / tupleLength)) * tupleLength;
+	}
 	public void close() {
 		try {
+			connection.bufferManager.dumpAll(fileName);
 			file.close();
 		} catch (IOException e) {
 			e.printStackTrace();

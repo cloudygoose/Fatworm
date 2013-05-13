@@ -35,12 +35,17 @@ import java.util.*;
 
 public class Driver implements java.sql.Driver{
 	/*
+	 * notes:
 	 * The tupleNum in the table is added by the insertExecutors, not by table itself
+	 * When I delete a tuple, the only thing I do is to set the null byte to 1
+	 * The getTupleFromByteArray(byte[]) method in Tuple and in Schema are very similiar\
+	 * Different from PagIds, RATFileCursor leaves all the pointer movements to the user, you should explicitly forward or backward
 	 * Drier.BLOCKLENGTH the length of a page
+	 * In OrderScan and DistinctScan, the RealSortScan is used for sorting, instead of the fake SortScan
 	 * FatDecimal.byteLength the serial length of FatDecimal
 	 * BufferManager.BUFFERSIZE the number of buffers in the page
 	 * Table.getTableCursor() return new RealTableCursor(name, records, schema, this); Whether table returns TableCursor or RealTableCursor
-	 * Driver.logFile
+	 * Driver.logFile boolean indicates whether Log to file
 	 */
 	static {
 		try {
