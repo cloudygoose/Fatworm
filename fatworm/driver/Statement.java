@@ -44,14 +44,14 @@ public class Statement implements java.sql.Statement {
 				//Log.v("\n" + p.getPrint(0));
 				
 				scan = p.getScan();
-				//Log.v("\n" + scan.getPrint(0));
+				Log.v("\n" + scan.getPrint(0));
 				/*
 				LinkedList<FuncExp> list = new LinkedList<FuncExp>();
 				Log.getAllFunc(scan, list);
 				for (int i = 0;i < list.size();i++)
 					Log.v(list.get(i).getPrint(0));
 				 */
-				
+				/*
 				scan.open();
 				while (scan.next()) {
 					Tuple res = scan.getTuple();
@@ -59,7 +59,7 @@ public class Statement implements java.sql.Statement {
 				}
 				scan.close();
 				Log.v("...one query complete...");
-				
+				*/
 				//Log.v(scan.generateExTuple().getPrint());
 			} else
 			if (isCreateTable(t)) {

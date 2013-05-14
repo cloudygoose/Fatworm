@@ -28,6 +28,7 @@ public class RATFileCursor {
 	}
 	public void newFileInit() {
 		fileName = "tmp" + tmpAll.toString();
+		tmpAll++;
 		try {
 			file = new RandomAccessFile(connection.folder + File.separator + fileName, "rw");
 			nowB = 0;

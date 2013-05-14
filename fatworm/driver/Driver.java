@@ -35,6 +35,11 @@ import java.util.*;
 
 public class Driver implements java.sql.Driver{
 	/*
+	 * do not support transaction and concurrency
+	 * I use RATFile to do the sort instead of the standard file-merge sort
+	 * 
+	 */
+	/*
 	 * notes:
 	 * The tupleNum in the table is added by the insertExecutors, not by table itself
 	 * When I delete a tuple, the only thing I do is to set the null byte to 1
@@ -51,8 +56,17 @@ public class Driver implements java.sql.Driver{
 		try {
 			Driver d = new Driver();
 			java.sql.DriverManager.registerDriver(d);
-				//d.test();
-		
+			/*
+			try {
+				d.test();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			*/
 		} catch (SQLException e) {
 			throw new RuntimeException("Can't register driver!");
 		}

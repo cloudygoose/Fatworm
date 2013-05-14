@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.*;
 public class BufferManager {
-	public static final int BUFFERSIZE = 100;
+	public static final int BUFFERSIZE = 100000;
 	int pageNumInBuffer;
 	fatworm.driver.Connection connection;
 	TreeMap<PageId, FatBlock> bufferMap;
@@ -51,9 +51,10 @@ public class BufferManager {
 			TimePageId dump = null;
 			try {
 				dump = queue.first();
+				//Log.v("kicking timeStamp : " + dump.lastUseTime);
 			} catch (Exception e) {
 				Log.v("queue.first fail");
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 			Log.assertTrue(queue.remove(dump));
 			FatBlock dumpB = bufferMap.remove(dump.getPageId());
@@ -81,6 +82,7 @@ public class BufferManager {
 		fb.setInBuffer(true);
 		bufferMap.put(tpi.getPageId(), fb);
 		pageNumInBuffer++;
+		Log.v("pageNumInBuffer : " + pageNumInBuffer);
 		return fb;
 	}
 }

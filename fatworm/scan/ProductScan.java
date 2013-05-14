@@ -7,7 +7,6 @@ import fatworm.log.DevelopException;
 import fatworm.log.Log;
 import fatworm.table.*;
 public class ProductScan extends Scan{
-	static int alll = 0;
 	Scan sa, sb;
 	fatworm.driver.Connection connection;
 	Tuple nextT;
@@ -45,9 +44,6 @@ public class ProductScan extends Scan{
 	}
 	@Override
 	public boolean next() throws Exception {
-		alll++;
-		if (alll % 1000 == 0)
-			Log.v("alll : " + alll);
 		if (!begins)
 			return false;
 		nextT = null;

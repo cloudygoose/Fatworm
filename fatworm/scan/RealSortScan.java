@@ -36,7 +36,7 @@ public class RealSortScan extends SortScan {
 			mainCursor.forward();
 			++tupleNum;
 		}
-		Log.v(tupleNum);
+		Log.v("tupleNum : " + tupleNum);
 		source.close();
 		/*
 		RATFileCursor cursorI = mainCursor.getCursor(0);
@@ -58,7 +58,7 @@ public class RealSortScan extends SortScan {
 			cursorI.forward();
 		}
 		*/
-		qsort(1, tupleNum - 1, mainCursor);
+		qsort(0, tupleNum - 1, mainCursor);
 		nextT = null;
 		iter = -1;
 		mainCursor.set(0);
@@ -66,10 +66,10 @@ public class RealSortScan extends SortScan {
 	public void qsort(int l, int r, RATFileCursor mainC) {
 		int i = l, j = r;
 		RATFileCursor cursorI = mainC.getCursor(i), cursorJ = mainC.getCursor(j);
-		Tuple tX = getTuple(cursorI);
+		Tuple tX = exT.getTupleFromByteArray(mainC.getCursor((l + r)/ 2).getTypleArray());
 		while (i <= j) {
-			while (comparator.bigger(tX, getTuple(cursorI))) { i++; cursorI.forward(); }
-			while (comparator.bigger(getTuple(cursorJ), tX)) { j--; cursorJ.backward(); }
+			while (comparator.bigger(getTuple(cursorI), tX)) { i++; cursorI.forward(); }
+			while (comparator.bigger(tX, getTuple(cursorJ))) { j--; cursorJ.backward(); }
 			if (i <= j) {
 				Tuple tmp = getTuple(cursorI);
 				cursorI.insertTuple(getTuple(cursorJ).getByteArray());
@@ -78,6 +78,7 @@ public class RealSortScan extends SortScan {
 				j--; cursorJ.backward();
 			}
 		}
+		//Log.v("now sorting r : " + r + " weishu : " + (new Integer(r)).toString().length());
 		if (j > l)
 			qsort(l, j, mainC);
 		if (i < r)

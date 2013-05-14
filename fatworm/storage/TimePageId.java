@@ -17,6 +17,7 @@ public class TimePageId extends PageId implements Comparable {
 	public void setLastUseTime(Long time) {
 		lastUseTime = time;
 	}
+	//about the priority of being kicked out of the tree
 	@Override
 	public int compareTo(Object o) {
 		if (o instanceof TimePageId) {
