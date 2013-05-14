@@ -58,6 +58,7 @@ public class RealSortScan extends SortScan {
 			cursorI.forward();
 		}
 		*/
+		qsort(1, tupleNum - 1, mainCursor);
 		nextT = null;
 		iter = -1;
 		mainCursor.set(0);
@@ -77,6 +78,10 @@ public class RealSortScan extends SortScan {
 				j--; cursorJ.backward();
 			}
 		}
+		if (j > l)
+			qsort(l, j, mainC);
+		if (i < r)
+			qsort(i, r, mainC);
 	}
 	public Tuple getTuple(RATFileCursor c) {
 		return exT.getTupleFromByteArray(c.getTypleArray());
