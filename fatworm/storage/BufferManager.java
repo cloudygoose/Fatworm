@@ -74,6 +74,8 @@ public class BufferManager {
 			e.printStackTrace();
 		}
 		TimePageId tpi = new TimePageId(id.getFileName(), id.getId(), id.getTable());
+		if (id.getTable() == null)
+			tpi.file = id.file; //only for RATFile
 		fb = new FatBlock(b, tpi);
 		queue.add(tpi);
 		fb.setInBuffer(true);

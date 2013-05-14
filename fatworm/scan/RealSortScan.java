@@ -9,8 +9,10 @@ public class RealSortScan extends SortScan {
 	int tupleNum;
 	RATFileCursor mainCursor;
 	Tuple exT;
+	TupleComparator comparator;
 	public RealSortScan(Scan s, ArrayList<Boolean> asc, ArrayList<IdExpression> id, fatworm.driver.Connection c) {
 		super(s, asc, id, c);
+		comparator = new TupleComparator(ascList, ids);
 		try {
 			exT = source.generateExTuple();
 		} catch (Exception e) {
@@ -34,8 +36,9 @@ public class RealSortScan extends SortScan {
 			mainCursor.forward();
 			++tupleNum;
 		}
+		Log.v(tupleNum);
 		source.close();
-		TupleComparator comparator = new TupleComparator(ascList, ids);
+		/*
 		RATFileCursor cursorI = mainCursor.getCursor(0);
 		RATFileCursor cursorJ;
 		for (int i = 0;i < tupleNum - 1;i++) {
@@ -54,9 +57,29 @@ public class RealSortScan extends SortScan {
 			}
 			cursorI.forward();
 		}
+		*/
 		nextT = null;
 		iter = -1;
 		mainCursor.set(0);
+	}
+	public void qsort(int l, int r, RATFileCursor mainC) {
+		int i = l, j = r;
+		RATFileCursor cursorI = mainC.getCursor(i), cursorJ = mainC.getCursor(j);
+		Tuple tX = getTuple(cursorI);
+		while (i <= j) {
+			while (comparator.bigger(tX, getTuple(cursorI))) { i++; cursorI.forward(); }
+			while (comparator.bigger(getTuple(cursorJ), tX)) { j--; cursorJ.backward(); }
+			if (i <= j) {
+				Tuple tmp = getTuple(cursorI);
+				cursorI.insertTuple(getTuple(cursorJ).getByteArray());
+				cursorJ.insertTuple(tmp.getByteArray());
+				i++; cursorI.forward();
+				j--; cursorJ.backward();
+			}
+		}
+	}
+	public Tuple getTuple(RATFileCursor c) {
+		return exT.getTupleFromByteArray(c.getTypleArray());
 	}
 	@Override
 	public void close() {

@@ -34,6 +34,8 @@ public class TimePageId extends PageId implements Comparable {
 		return "TimePageId : " + fileName + " " + id;
 	}
 	public PageId getPageId() {
-		return new PageId(fileName, id, table);
+		PageId p = new PageId(fileName, id, table); 
+		p.file = file;
+		return p;
 	}
 }
