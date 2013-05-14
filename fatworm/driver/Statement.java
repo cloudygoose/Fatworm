@@ -44,7 +44,7 @@ public class Statement implements java.sql.Statement {
 				//Log.v("\n" + p.getPrint(0));
 				
 				scan = p.getScan();
-				Log.v("\n" + scan.getPrint(0));
+				//Log.v("\n" + scan.getPrint(0));
 				/*
 				LinkedList<FuncExp> list = new LinkedList<FuncExp>();
 				Log.getAllFunc(scan, list);

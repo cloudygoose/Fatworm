@@ -55,6 +55,7 @@ public class Driver implements java.sql.Driver{
 	static {
 		try {
 			Driver d = new Driver();
+			System.out.println(Runtime.getRuntime().maxMemory());
 			java.sql.DriverManager.registerDriver(d);
 			/*
 			try {

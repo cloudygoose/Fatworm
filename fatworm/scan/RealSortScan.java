@@ -36,7 +36,7 @@ public class RealSortScan extends SortScan {
 			mainCursor.forward();
 			++tupleNum;
 		}
-		Log.v("tupleNum : " + tupleNum);
+		//Log.v("tupleNum : " + tupleNum);
 		source.close();
 		/*
 		RATFileCursor cursorI = mainCursor.getCursor(0);

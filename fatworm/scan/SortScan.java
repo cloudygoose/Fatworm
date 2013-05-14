@@ -25,9 +25,16 @@ public class SortScan extends Scan {
 	@Override
 	public void open() throws Exception {
 		tuples = new ArrayList<Tuple>();
+		int kk = 0;
 		source.open();
 		while (source.next()) {
 			tuples.add(source.getTuple());
+			/*
+			kk++;
+			if (kk % 100 == 0) {
+				Log.v("kk : " + kk);
+			}
+			*/
 		}
 		source.close();
 		TupleComparator comparator = new TupleComparator(ascList, ids);
