@@ -1,7 +1,12 @@
 package fatworm.table;
+
+import fatworm.index.*;
+
+
 import java.util.*;
 
 import java.io.*;
+import fatworm.index.*;
 import fatworm.storage.*;
 import fatworm.log.Log;
 import fatworm.type.*;
@@ -13,6 +18,7 @@ public class Table implements Serializable {
 	String dbName;
 	String name;
 	String fileName;
+	TreeMap<String, FatIndex> indexs;
 	transient RandomAccessFile file;
 	int tuplesNum;	//exact valid tuple number
 	transient ArrayList<Tuple> records;
@@ -34,11 +40,14 @@ public class Table implements Serializable {
 		schema = new Schema(name);
 		records = new ArrayList<Tuple>();
 		tuplesNum = 0;
+		indexs = new TreeMap<String, FatIndex>();
+	}
+	public String getFileName() {
+		return fileName;
 	}
 	public void setFile() {
 		try {
-			String ss = connection.folder + File.separator + dbName + "_" + name;
-			file = new RandomAccessFile(ss, "rw");
+			file = new RandomAccessFile(fileName, "rw");
 			insertCursor.setNullBlock();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -56,6 +65,12 @@ public class Table implements Serializable {
 	public void setConnection(fatworm.driver.Connection c) {
 		connection = c;
 		setFile();
+		Iterator<FatIndex> iter = indexs.values().iterator();
+		while (iter.hasNext()) {
+			FatIndex index = iter.next();
+			index.setConnection(connection);
+			index.setFile();
+		}
 	}
 	public fatworm.driver.Connection getConnection() {
 		return connection;
@@ -88,6 +103,12 @@ public class Table implements Serializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	public FatIndex createIndex(String indexName, String colName) {
+		FatIndex index = new FatIndex(indexName, this, colName, connection);
+		Log.assertTrue(indexs.get(colName) == null);
+		indexs.put(colName, index);
+		return index;
 	}
 	public TableCursorPageId getStartTableCursorPageId() {
 		return new TableCursorPageId(fileName, 0, this);

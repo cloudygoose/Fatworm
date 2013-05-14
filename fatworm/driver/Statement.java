@@ -101,7 +101,12 @@ public class Statement implements java.sql.Statement {
 			if (isDropTable(t)) {
 				DropTableExecutor executor = new DropTableExecutor(t, this);
 				executor.execute();
-			} else
+			} else 
+			if (isCreateIndex(t)) {
+				CreateIndexExecutor executor = new CreateIndexExecutor(t, this);
+				executor.execute();
+			}
+			else
 			throw new DevelopException("top level : Unknown query");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -139,6 +144,13 @@ public class Statement implements java.sql.Statement {
 		CommonTree tr = (CommonTree)t;
 		String s = FatwormParser.tokenNames[tr.getType()];
 		if (s.equals("DROP_DATABASE"))
+			return true;
+		return false;		
+	}
+	public boolean isCreateIndex(Tree t) {
+		CommonTree tr = (CommonTree)t;
+		String s = FatwormParser.tokenNames[tr.getType()];
+		if (s.equals("CREATE_INDEX") || s.equals("CREATE_UNIQUE_INDEX"))
 			return true;
 		return false;		
 	}

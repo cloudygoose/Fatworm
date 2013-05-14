@@ -35,15 +35,21 @@ import java.util.*;
 
 public class Driver implements java.sql.Driver{
 	/*
+	 * TODO:
+	 * createIndex should scan all the tuples in the table
+	 */
+	
+	/*
 	 * do not support transaction and concurrency
-	 * I use RATFile to do the sort instead of the standard file-merge sort
-	 * 
+	 * I use RATFile to do the File-qsort instead of the standard file-merge sort
+	 * the tuples in table is fixed-length so the updates and insert are very easy, and so I don't need pointers for table-file
+	 * for me, unique index is just index, because the data has no error
 	 */
 	/*
-	 * notes:
+	 * implementation notes:
 	 * The tupleNum in the table is added by the insertExecutors, not by table itself
 	 * When I delete a tuple, the only thing I do is to set the null byte to 1
-	 * The getTupleFromByteArray(byte[]) method in Tuple and in Schema are very similiar\
+	 * The getTupleFromByteArray(byte[]) method in Tuple and in Schema are very similiar
 	 * Different from PagIds, RATFileCursor leaves all the pointer movements to the user, you should explicitly forward or backward
 	 * Drier.BLOCKLENGTH the length of a page
 	 * In OrderScan and DistinctScan, the RealSortScan is used for sorting, instead of the fake SortScan
@@ -55,9 +61,7 @@ public class Driver implements java.sql.Driver{
 	static {
 		try {
 			Driver d = new Driver();
-			System.out.println(Runtime.getRuntime().maxMemory());
 			java.sql.DriverManager.registerDriver(d);
-			/*
 			try {
 				d.test();
 			} catch (IOException e) {
@@ -67,7 +71,6 @@ public class Driver implements java.sql.Driver{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			*/
 		} catch (SQLException e) {
 			throw new RuntimeException("Can't register driver!");
 		}
@@ -86,6 +89,7 @@ public class Driver implements java.sql.Driver{
 	}
 
 	public static void main(String[] args) throws Exception {
+		Log.v("max memory : " + Runtime.getRuntime().maxMemory());
 	}
 	public void test() throws SQLException, IOException, ClassNotFoundException {
 		Log.open = true;
@@ -117,6 +121,7 @@ public class Driver implements java.sql.Driver{
 				"b varchar(20) default 'aaaaa', primary key(a))");
 		stmt.execute("create table test2(aa int not null auto_increment, " + 
 				"b varchar(20) default 'aaaaa')");
+		stmt.execute("create index index1 on test (a)");
 		stmt.execute("insert into test values (1, 'aa')");
 		stmt.execute("insert into test values (3, 'aa')");
 		stmt.execute("insert into test (a) values(2)");

@@ -82,7 +82,7 @@ public class BufferManager {
 		fb.setInBuffer(true);
 		bufferMap.put(tpi.getPageId(), fb);
 		pageNumInBuffer++;
-		Log.v("pageNumInBuffer : " + pageNumInBuffer);
+		//Log.v("pageNumInBuffer : " + pageNumInBuffer);
 		return fb;
 	}
 }
