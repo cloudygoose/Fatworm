@@ -43,7 +43,9 @@ public class Driver implements java.sql.Driver{
 	 * do not support transaction and concurrency
 	 * I use RATFile to do the File-qsort instead of the standard file-merge sort
 	 * the tuples in table is fixed-length so the updates and insert are very easy, and so I don't need pointers for table-file
+	 * cont- so the insert's performance is maximized, but update and scan depends on whether exists massive delete
 	 * for me, unique index is just index, because the data has no error
+	 * many types are both instance and factory, like tuple, FatType, IndexPair, beacause they carry type information
 	 */
 	/*
 	 * implementation notes:

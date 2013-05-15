@@ -12,10 +12,26 @@ public class FatIndex implements Serializable {
 	String columnName;
 	String fileName;
 	String indexName;
+	int maxLevel;
+	//root has the maxLevel, the leaf has level 1
+	int nextNewBlock;
+	int rootBlock;
 	transient RandomAccessFile file;
 	transient fatworm.driver.Connection connection;
 	public String getColumnName() {
 		return columnName;
+	}
+	public int getMaxLevel() {
+		return maxLevel;
+	}
+	public int getRootBlockNumber() {
+		return rootBlock;
+	}
+	public void setNewRootBlockNumber(int r) {
+		rootBlock = r;
+	}
+	public int getNextNewBlockNumber() {
+		return nextNewBlock++;
 	}
 	public FatIndex(String indexN, Table t, String col, fatworm.driver.Connection c) {
 		table = t;
@@ -23,6 +39,9 @@ public class FatIndex implements Serializable {
 		connection = c;
 		indexName = indexN;
 		fileName = table.getFileName() + "_" + columnName;
+		maxLevel = 1;
+		rootBlock = 0;
+		nextNewBlock = 0;
 		try {
 			file = new RandomAccessFile(fileName, "rw");
 		} catch (FileNotFoundException e) {
