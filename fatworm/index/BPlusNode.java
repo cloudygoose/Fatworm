@@ -34,6 +34,9 @@ public class BPlusNode {
 		fatBlock = index.connection.bufferManager
 				.getPage(new PageId(index.fileName, blockNum, index.file));
 	}
+	public BPlusAction insertPair(IndexPair pair) {
+		//TODO
+	}
 	public void getValuesFromFatBlock() {
 		if (!fatBlock.inBuffer())
 			fatBlock = index.connection.bufferManager

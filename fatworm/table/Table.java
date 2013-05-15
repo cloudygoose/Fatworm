@@ -105,7 +105,11 @@ public class Table implements Serializable {
 		}
 	}
 	public FatIndex createIndex(String indexName, String colName) {
-		FatIndex index = new FatIndex(indexName, this, colName, connection);
+		int k;
+		for (k = 0;k < schema.getColumnNumber();k++)
+			if (schema.getColumn(k).getName().equals(colName))
+				break;
+		FatIndex index = new FatIndex(indexName, this, colName, schema.getColumn(k).getType(), connection);
 		Log.assertTrue(indexs.get(colName) == null);
 		indexs.put(colName, index);
 		return index;
