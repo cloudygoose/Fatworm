@@ -1,17 +1,20 @@
 package fatworm.index;
 import fatworm.type.*;
 
+
 import java.nio.ByteBuffer;
 import java.util.*;
 
+import fatworm.log.*;
 import fatworm.driver.Driver;
-import fatworm.log.Log;
 import fatworm.storage.*;
 public class BPlusNode {
 	protected FatType keyType;
 	protected Integer leftChildB;
 	protected Integer rightChildB;
 	protected FatIndex index;
+	protected boolean isLeftM;
+	protected boolean isRightM;
 	protected int level;
 	protected int blockNum;
 	protected ArrayList<IndexPair> pairs;
@@ -23,12 +26,14 @@ public class BPlusNode {
 	public BPlusNode() {
 		
 	}
-	public BPlusNode(FatType key, FatIndex i, int l) {
+	public BPlusNode(FatType key, FatIndex i, int l, boolean isL, boolean isR) {
 		keyType = key;
 		index = i;
 		level = l;
 		leftChildB = -1;
 		rightChildB = -1;
+		isLeftM = isL;
+		isRightM = isR;
 		pairs = new ArrayList<IndexPair>();
 		blockNum = index.getNextNewBlockNumber();
 		fatBlock = index.connection.bufferManager
@@ -49,8 +54,8 @@ public class BPlusNode {
 	}
 	public BPlusAction insertPair(IndexPair pair) {
 		//for insert there is either a insertAction or and insertAction after an exchangeAction
-		BPlusAction res = null;
 		if (isLeaf()) {
+			BPlusAction res = null;
 			res = doInsertAction(new BPlusInsertAction(pair), res);
 			return res;
 		}
@@ -59,9 +64,24 @@ public class BPlusNode {
 			++in;
 		if (in > 0)
 			in--;
-		BPlusNode son = getInstanceFromFatBlock(pairs.get(in).fileOffset, keyType, index, level + 1);
-		
-		return null;
+		BPlusNode son = getInstanceFromFatBlock(pairs.get(in).fileOffset, keyType, index, level + 1, in == 0, in == pairs.size() - 1);
+		BPlusAction toDo = son.insertPair(pair);
+		BPlusAction invoke = doAllAction(toDo);
+		return invoke;
+	}
+	public BPlusAction doAllAction(BPlusAction action) {
+		BPlusAction res = new BPlusAction();
+		while (action != null) {
+			if (action instanceof BPlusInsertAction)
+				res = doInsertAction((BPlusInsertAction)action, res);
+			else
+			if (action instanceof BPlusExchangeAction)
+				res = doExchangeAction((BPlusExchangeAction)action, res);
+			else
+			throw new DevelopException();
+			action = action.getNextAction();
+		}
+		return res.getNextAction();
 	}
 	//An insertAction won't insert at the head, so it won't invoke the exchangeAction
 	public BPlusAction doInsertAction(BPlusInsertAction insertA, BPlusAction res) {
@@ -74,12 +94,13 @@ public class BPlusNode {
 		pairs.add(in, pair);
 		if (pairs.size() > index.maxPointerNum) {
 			ArrayList<IndexPair> newList = splitRight(pairs);
-			BPlusNode newBrother = new BPlusNode(keyType, index, level);
+			BPlusNode newBrother = new BPlusNode(keyType, index, level, false, isRightM);
 			newBrother.leftChildB = blockNum;
 			newBrother.rightChildB = rightChildB;
 			rightChildB = newBrother.blockNum;
 			newBrother.pairs = newList;
 			res = addAction(res, new BPlusInsertAction(newList.get(0)));
+			isRightM = false;
 			newBrother.storeToFatBlock();
 		}
 		storeToFatBlock();
@@ -90,11 +111,17 @@ public class BPlusNode {
 	}
 	public BPlusAction doExchangeAction(BPlusExchangeAction changeA, BPlusAction res) {
 		int in;
-		IndexPair oldFirstP = null, pair = insertA.getInsert();
+		IndexPair oldFirstP = null, pair = changeA.getFrom();
 		for (in = 0;in < pairs.size();in++)
-			if (pairs.get(in).equals(changeA.getFrom()))
+			if (pairs.get(in).equals(pair))
 				break;
-		
+		Log.assertTrue(in != pairs.size());
+		pairs.set(in, changeA.getTo());
+		if (in == 0)
+			res = addAction(res, new BPlusExchangeAction(new IndexPair(oldFirstP.getKey(), blockNum),
+					new IndexPair(pairs.get(0).getKey(), blockNum)));
+		storeToFatBlock();
+		return res;
 	}
 	private BPlusAction addAction(BPlusAction bp, BPlusAction np) {
 		if (bp == null)
@@ -130,7 +157,7 @@ public class BPlusNode {
 		}
 		fatBlock.putBytes(bb.array(), 0);
 	}
-	public static BPlusNode getInstanceFromFatBlock(int block, FatType key, FatIndex i, int l) {
+	public static BPlusNode getInstanceFromFatBlock(int block, FatType key, FatIndex i, int l, boolean isL, boolean isR) {
 		BPlusNode bp = new BPlusNode();
 		bp.keyType = key;
 		bp.index = i;
@@ -140,6 +167,19 @@ public class BPlusNode {
 		bp.fatBlock = i.connection.bufferManager
 				.getPage(new PageId(i.fileName, block, i.file));
 		bp.getValuesFromFatBlock();
+		bp.isLeftM = isL;
+		bp.isRightM = isR;
 		return bp;
+	}
+	public void LogBPlus() {
+		if (isLeaf()) {
+			for (int i = 0;i < pairs.size();i++)
+				Log.v(pairs.get(i).getPrint());
+			return;
+		}
+		for (int i = 0;i < pairs.size();i++) {
+			BPlusNode son = getInstanceFromFatBlock(pairs.get(i).getFileOffset(), keyType, index, level + 1, i == 0, i == pairs.size() - 1);
+			son.LogBPlus();
+		}
 	}
 }

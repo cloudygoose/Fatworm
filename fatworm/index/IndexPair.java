@@ -39,4 +39,7 @@ public class IndexPair {
 		IndexPair ip = (IndexPair)o;
 		return (key.compareTo(ip.key) == 0 && fileOffset.equals(ip.fileOffset));
 	}
+	public String getPrint() {
+		return "ip : " + key.getPrint(0) + "," + fileOffset;
+	}
 }
