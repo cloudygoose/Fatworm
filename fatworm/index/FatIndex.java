@@ -1,10 +1,13 @@
 package fatworm.index;
 import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 
+import fatworm.type.*;
 import fatworm.driver.Connection;
+import fatworm.driver.Driver;
 import fatworm.table.*;
 public class FatIndex implements Serializable {
 	private static final long serialVersionUID = 26L;
@@ -13,6 +16,8 @@ public class FatIndex implements Serializable {
 	String fileName;
 	String indexName;
 	int maxLevel;
+	int maxPointerNum;
+	FatType keyType;
 	//root has the maxLevel, the leaf has level 1
 	int nextNewBlock;
 	int rootBlock;
@@ -33,7 +38,7 @@ public class FatIndex implements Serializable {
 	public int getNextNewBlockNumber() {
 		return nextNewBlock++;
 	}
-	public FatIndex(String indexN, Table t, String col, fatworm.driver.Connection c) {
+	public FatIndex(String indexN, Table t, String col, FatType key, fatworm.driver.Connection c) {
 		table = t;
 		columnName = col;
 		connection = c;
@@ -42,6 +47,7 @@ public class FatIndex implements Serializable {
 		maxLevel = 1;
 		rootBlock = 0;
 		nextNewBlock = 0;
+		maxPointerNum = (Driver.BLOCKLENGTH - 8) / (key.getByteArrayLength() + 4);
 		try {
 			file = new RandomAccessFile(fileName, "rw");
 		} catch (FileNotFoundException e) {

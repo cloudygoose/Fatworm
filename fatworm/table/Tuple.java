@@ -31,7 +31,7 @@ public class Tuple {
 	public Tuple copy() {
 		Tuple t = new Tuple();
 		for (int i = 0;i < tupleColumns.size();i++)
-			t.addColumn(tupleColumns.get(i));
+			t.addColumn(tupleColumns.get(i).copy());
 		return t;
 	}
 	public Tuple getTupleFromByteArray(byte[] b) {

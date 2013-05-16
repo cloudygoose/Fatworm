@@ -20,6 +20,9 @@ public class TupleColumn {
 	public void setTableName(String s) {
 		tableName = s;
 	}
+	public TupleColumn copy() {
+		return new TupleColumn(tableName, columnName, value.copy());
+	}
 	public IdExpression getIdExpression() {
 		return new IdExpression(tableName, columnName);
 	}

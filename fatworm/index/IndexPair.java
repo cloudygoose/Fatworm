@@ -34,4 +34,9 @@ public class IndexPair {
 		IndexPair ip = new IndexPair(key.newInstanceFromByteBuffer(bb), bb.getInt());
 		return ip;
 	}
+	@Override
+	public boolean equals(Object o) {
+		IndexPair ip = (IndexPair)o;
+		return (key.compareTo(ip.key) == 0 && fileOffset.equals(ip.fileOffset));
+	}
 }
