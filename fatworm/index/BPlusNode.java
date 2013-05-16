@@ -34,8 +34,26 @@ public class BPlusNode {
 		fatBlock = index.connection.bufferManager
 				.getPage(new PageId(index.fileName, blockNum, index.file));
 	}
+	public boolean isLeaf() {
+		return (level == index.maxLevel);
+	}
+	public boolean isRoot() {
+		return (level == 1);
+	}
+	public ArrayList<IndexPair> splitSecond(ArrayList<IndexPair> vict) {
+		ArrayList<IndexPair> 
+	}
 	public BPlusAction insertPair(IndexPair pair) {
-		//TODO
+		if (isLeaf()) {
+			IndexPair firstP = null;
+			if (pairs.size() > 0)
+				firstP = pairs.get(0);
+			int in = 0;
+			while (in < pairs.size() && pairs.get(in).getKey().compareTo(pair.getKey()) < 0)
+				++in;
+			pairs.add(in, pair);
+			
+		}
 	}
 	public void getValuesFromFatBlock() {
 		if (!fatBlock.inBuffer())
