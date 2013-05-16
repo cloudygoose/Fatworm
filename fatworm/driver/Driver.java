@@ -64,6 +64,7 @@ public class Driver implements java.sql.Driver{
 		try {
 			Driver d = new Driver();
 			java.sql.DriverManager.registerDriver(d);
+			/*
 			try {
 				d.test();
 			} catch (IOException e) {
@@ -73,6 +74,7 @@ public class Driver implements java.sql.Driver{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			*/
 		} catch (SQLException e) {
 			throw new RuntimeException("Can't register driver!");
 		}

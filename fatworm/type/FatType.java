@@ -21,6 +21,14 @@ public class FatType implements Comparable, Serializable {
 		assocTableName = null;
 		assocColumnName = null;
 	}
+	public FatType copy() {
+		try {
+			return newInstance(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	public int getByteArrayLength() {
 		throw new DevelopException();
 	}

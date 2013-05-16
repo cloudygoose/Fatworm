@@ -3,6 +3,7 @@ package fatworm.index;
 public class BPlusExchangeAction extends BPlusAction {
 	IndexPair iPFrom, iPTo;
 	public BPlusExchangeAction(IndexPair from, IndexPair to) {
+		super();
 		iPFrom = from;
 		iPTo = to;
 	}

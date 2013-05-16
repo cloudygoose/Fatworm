@@ -37,7 +37,8 @@ public class UpdateExecutor extends Executor {
 		table.open();
 		while (table.next()) {
 			Tuple t = table.getTuple();
-			statement.getConnection().tupleStack.push(t.copy());
+			//statement.getConnection().tupleStack.push(t.copy()); I found that update does not use old values.
+			statement.getConnection().tupleStack.push(t);
 			boolean cc = true;
 			if (condition != null)
 				cc = Log.checkFatBoolean(condition.evaluate()); 

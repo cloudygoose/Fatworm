@@ -1,9 +1,14 @@
 package fatworm.index;
 
 public class BPlusAction {
+	BPlusAction last;
 	BPlusAction next;
-	public void setNextAction(BPlusAction action) {
-		next = action;
+	public BPlusAction() {
+		last = this;
+	}
+	public void setLastAction(BPlusAction action) {
+		last.next = action;
+		last = action;
 	}
 	public BPlusAction getNextAction() {
 		return next;
