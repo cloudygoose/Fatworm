@@ -15,6 +15,7 @@ public class FatInteger extends FatType implements Serializable {
 	}
 	public FatInteger() {
 		super();
+		number = 0;
 	}
 	public int getNumber() {
 		return number;

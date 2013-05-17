@@ -32,7 +32,7 @@ import fatworm.index.*;
 import fatworm.type.*;
 import java.io.*;
 import java.util.*;
-
+import fatworm.index.*;
 public class Driver implements java.sql.Driver{
 	/*
 	 * TODO:
@@ -64,7 +64,7 @@ public class Driver implements java.sql.Driver{
 		try {
 			Driver d = new Driver();
 			java.sql.DriverManager.registerDriver(d);
-			/*
+			
 			try {
 				d.test();
 			} catch (IOException e) {
@@ -74,13 +74,13 @@ public class Driver implements java.sql.Driver{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			*/
+			
 		} catch (SQLException e) {
 			throw new RuntimeException("Can't register driver!");
 		}
 	}
 	public static final boolean logFile = false;
-	public static final int BLOCKLENGTH = 4096;
+	public static final int BLOCKLENGTH = 40;
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
 		// TODO Auto-generated method stub
@@ -122,29 +122,13 @@ public class Driver implements java.sql.Driver{
 		stmt.execute("create database test");
 		stmt.execute("use test");
 		stmt.execute("create table test(a int not null auto_increment, " +
-				"b varchar(20) default 'aaaaa', primary key(a))");
+				"b varchar(3) default 'aaa', primary key(a))");
 		stmt.execute("create table test2(aa int not null auto_increment, " + 
-				"b varchar(20) default 'aaaaa')");
-		stmt.execute("create index index1 on test (a)");
-		stmt.execute("insert into test values (1, 'aa')");
-		stmt.execute("insert into test values (3, 'aa')");
-		stmt.execute("insert into test (a) values(2)");
-		stmt.execute("insert into test values (1, 'aa')");
-		stmt.execute("insert into test values (3, 'aa')");
-		stmt.execute("insert into test (a) values(2)");
-		stmt.execute("insert into test values (1, 'aa')");
-		stmt.execute("insert into test values (3, 'aa')");
-		stmt.execute("insert into test values (1, 'aa')");
-		stmt.execute("insert into test values (3, 'aa')");
-		stmt.execute("insert into test (a) values(2)");
-		stmt.execute("insert into test values (1, 'aa')");
-		stmt.execute("insert into test values (3, 'aa')");
-		stmt.execute("insert into test (a) values(2)");
-		stmt.execute("insert into test values (1, 'aa')");
-		stmt.execute("insert into test values (3, 'aa')");
-		stmt.execute("insert into test values (1, 'aa')");
-		stmt.execute("insert into test values (3, 'aa')");
-		stmt.execute("insert into test (a) values(2)");
+				"b varchar(3) default 'aaa')");
+		FatIndex testIndex = connection.dbMgr.dbs.get("test").getTable("test").createIndex("index1", "a");
+		for (int i = 1;i <= 2;i++)
+			testIndex.insertPair(new FatInteger(i), i);
+		testIndex.logBPlus();
 		stmt.execute("insert into test values (1, 'aa')");
 		stmt.execute("insert into test values (3, 'aa')");
 		stmt.execute("insert into test (a) values(2)");

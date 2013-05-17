@@ -44,15 +44,18 @@ public class FatIndex implements Serializable {
 		connection = c;
 		indexName = indexN;
 		fileName = table.getFileName() + "_" + columnName;
-		maxLevel = 1;
-		rootBlock = 0;
-		nextNewBlock = 0;
-		maxPointerNum = (Driver.BLOCKLENGTH - 8) / (key.getByteArrayLength() + 4);
 		try {
 			file = new RandomAccessFile(fileName, "rw");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		keyType = key;
+		maxLevel = 1;
+		rootBlock = 0;
+		BPlusNode rootNode = new BPlusNode(keyType, this, 1, true, true);
+		rootNode.storeToFatBlock(); //initialize the file
+		nextNewBlock = 1;
+		maxPointerNum = (Driver.BLOCKLENGTH - 8) / (key.getByteArrayLength() + 4);
 	}
 	public void setFile() {
 		try {
@@ -63,5 +66,34 @@ public class FatIndex implements Serializable {
 	}
 	public void setConnection(fatworm.driver.Connection c) {
 		connection = c;
+	}
+	public void logBPlus() {
+		BPlusNode root = getRoot();
+		root.LogBPlus();
+	}
+	public void insertPair(FatType key, Integer offset) {
+		BPlusNode root = getRoot(); 
+		IndexPair pair = new IndexPair(key, offset);
+		BPlusAction todo = root.insertPair(pair);
+		BPlusAction res = null;
+		IndexPair rightPair = null;
+		while (todo != null) {
+			if (todo instanceof BPlusInsertAction) {
+				rightPair = ((BPlusInsertAction)todo).insertP;
+			}
+			todo = todo.getNextAction();
+		}
+		
+		if (rightPair == null)
+			return;
+		IndexPair leftPair = new IndexPair(root.pairs.get(0).getKey(), rootBlock);
+		
+		rootBlock = getNextNewBlockNumber();
+		root = new BPlusNode(keyType, this, 1, true, true);
+		root.doInsertAction(new BPlusInsertAction(leftPair), null);
+		root.doInsertAction(new BPlusInsertAction(rightPair), null);
+	}
+	private BPlusNode getRoot() {
+		return BPlusNode.getInstanceFromFatBlock(rootBlock, keyType, this, 1, true, true);
 	}
 }

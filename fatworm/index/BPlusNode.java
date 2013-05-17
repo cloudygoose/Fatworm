@@ -38,6 +38,7 @@ public class BPlusNode {
 		blockNum = index.getNextNewBlockNumber();
 		fatBlock = index.connection.bufferManager
 				.getPage(new PageId(index.fileName, blockNum, index.file));
+		storeToFatBlock();
 	}
 	public boolean isLeaf() {
 		return (level == index.maxLevel);
@@ -66,19 +67,25 @@ public class BPlusNode {
 			in--;
 		BPlusNode son = getInstanceFromFatBlock(pairs.get(in).fileOffset, keyType, index, level + 1, in == 0, in == pairs.size() - 1);
 		BPlusAction toDo = son.insertPair(pair);
-		BPlusAction invoke = doAllAction(toDo);
+		BPlusAction invoke = doAllActionInvoke(toDo);
 		return invoke;
 	}
-	public BPlusAction doAllAction(BPlusAction action) {
+	public BPlusAction doAllActionInvoke(BPlusAction action) {
+		//first exchange, then delete, then insert
 		BPlusAction res = new BPlusAction();
+		BPlusAction tmp = action;
+		//Exchange
+		while (action != null) {
+			if (action instanceof BPlusExchangeAction)
+				res = doExchangeAction((BPlusExchangeAction)action, res);
+			action = action.getNextAction();
+		}
+		//TODO:Delete
+		//Insert
+		action = tmp;
 		while (action != null) {
 			if (action instanceof BPlusInsertAction)
 				res = doInsertAction((BPlusInsertAction)action, res);
-			else
-			if (action instanceof BPlusExchangeAction)
-				res = doExchangeAction((BPlusExchangeAction)action, res);
-			else
-			throw new DevelopException();
 			action = action.getNextAction();
 		}
 		return res.getNextAction();
@@ -138,9 +145,12 @@ public class BPlusNode {
 		rightChildB = bb.getInt();
 		IndexPair p = new IndexPair(keyType, 0); //factory
 		IndexPair now = p.getInstanceFromByteBuffer(bb);
-		while (now.getFileOffset() != -1) {
+		int nowHave = 0;
+		pairs = new ArrayList<IndexPair>();
+		while (now.getFileOffset() != -1 && nowHave < index.maxPointerNum) {
 			pairs.add(now);
 			now = p.getInstanceFromByteBuffer(bb);
+			nowHave++;
 		}
 	}
 	public void storeToFatBlock() {
@@ -155,6 +165,11 @@ public class BPlusNode {
 		while (iter.hasNext()) {
 			iter.next().storeIntoByteBuffer(bb);
 		}
+		//add the end mark
+		if (pairs.size() < index.getNextNewBlockNumber()) {
+			IndexPair nullPair = new IndexPair(keyType, -1);
+			nullPair.storeIntoByteBuffer(bb);
+		}
 		fatBlock.putBytes(bb.array(), 0);
 	}
 	public static BPlusNode getInstanceFromFatBlock(int block, FatType key, FatIndex i, int l, boolean isL, boolean isR) {
@@ -163,7 +178,7 @@ public class BPlusNode {
 		bp.index = i;
 		bp.level = l;
 		bp.blockNum = block;
-		bp.pairs = new ArrayList<IndexPair>();
+		
 		bp.fatBlock = i.connection.bufferManager
 				.getPage(new PageId(i.fileName, block, i.file));
 		bp.getValuesFromFatBlock();
@@ -172,6 +187,7 @@ public class BPlusNode {
 		return bp;
 	}
 	public void LogBPlus() {
+		Log.v("logging BPlus block: " + blockNum);
 		if (isLeaf()) {
 			for (int i = 0;i < pairs.size();i++)
 				Log.v(pairs.get(i).getPrint());
