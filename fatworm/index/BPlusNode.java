@@ -148,6 +148,7 @@ public class BPlusNode {
 		int nowHave = 0;
 		pairs = new ArrayList<IndexPair>();
 		while (now.getFileOffset() != -1 && nowHave < index.maxPointerNum) {
+			Log.v("get now : " + now.getPrint() + " blockNum : " + blockNum);
 			pairs.add(now);
 			now = p.getInstanceFromByteBuffer(bb);
 			nowHave++;
@@ -166,7 +167,10 @@ public class BPlusNode {
 			iter.next().storeIntoByteBuffer(bb);
 		}
 		//add the end mark
-		if (pairs.size() < index.getNextNewBlockNumber()) {
+		Log.v("compare : " + pairs.size() + " " + index.maxPointerNum);
+		if (pairs.size() < index.maxPointerNum) {
+			//why didn't do?
+			Log.v("!!!put null!!!" + blockNum);
 			IndexPair nullPair = new IndexPair(keyType, -1);
 			nullPair.storeIntoByteBuffer(bb);
 		}

@@ -1,10 +1,12 @@
 package fatworm.index;
 import java.io.File;
 
+
 import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 
+import fatworm.log.*;
 import fatworm.type.*;
 import fatworm.driver.Connection;
 import fatworm.driver.Driver;
@@ -53,9 +55,10 @@ public class FatIndex implements Serializable {
 		maxLevel = 1;
 		rootBlock = 0;
 		BPlusNode rootNode = new BPlusNode(keyType, this, 1, true, true);
+		maxPointerNum = (Driver.BLOCKLENGTH - 8) / (key.getByteArrayLength() + 4);
+		Log.v("maxPointerNum : " + maxPointerNum);
 		rootNode.storeToFatBlock(); //initialize the file
 		nextNewBlock = 1;
-		maxPointerNum = (Driver.BLOCKLENGTH - 8) / (key.getByteArrayLength() + 4);
 	}
 	public void setFile() {
 		try {
