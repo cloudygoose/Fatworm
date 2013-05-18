@@ -36,6 +36,7 @@ public class BPlusNode {
 		isRightM = isR;
 		pairs = new ArrayList<IndexPair>();
 		blockNum = index.getNextNewBlockNumber();
+		Log.v("!!new block!! : " + blockNum);
 		fatBlock = index.connection.bufferManager
 				.getPage(new PageId(index.fileName, blockNum, index.file));
 		storeToFatBlock();
