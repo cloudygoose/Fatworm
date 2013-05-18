@@ -1,4 +1,5 @@
 package fatworm.scan;
+import fatworm.driver.Driver;
 import fatworm.expression.*;
 import fatworm.index.*;
 import fatworm.log.Log;
@@ -66,6 +67,7 @@ public class GroupScan extends Scan {
 		}
 		env.open();
 		nextT = null;
+		connection.bufferManager.setBufferSize(Driver.BUFFERSIZE / 2);
 	}
 	@Override
 	public boolean next() throws Exception {
@@ -111,6 +113,7 @@ public class GroupScan extends Scan {
 	public void close() {
 		env.close();
 		source.close();
+		connection.bufferManager.setBufferSize(Driver.BUFFERSIZE);
 	}
 	@Override
 	public String getPrint(int old) throws Exception {

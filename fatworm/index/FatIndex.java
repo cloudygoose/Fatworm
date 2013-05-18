@@ -56,7 +56,6 @@ public class FatIndex implements Serializable {
 		rootBlock = 0;
 		BPlusNode rootNode = new BPlusNode(keyType, this, 1, true, true);
 		maxPointerNum = (Driver.BLOCKLENGTH - 8) / (key.getByteArrayLength() + 4);
-		Log.v("maxPointerNum : " + maxPointerNum);
 		rootNode.storeToFatBlock(); //initialize the file
 		nextNewBlock = 1;
 	}

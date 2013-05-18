@@ -36,7 +36,7 @@ public class BPlusNode {
 		isRightM = isR;
 		pairs = new ArrayList<IndexPair>();
 		blockNum = index.getNextNewBlockNumber();
-		Log.v("!!new block!! : " + blockNum);
+		//Log.v("!!new block!! : " + blockNum);
 		fatBlock = index.connection.bufferManager
 				.getPage(new PageId(index.fileName, blockNum, index.file));
 		storeToFatBlock();
@@ -102,7 +102,7 @@ public class BPlusNode {
 		pairs.add(in, pair);
 		//Log.v("after : in : " + in + " pairs.size() : " + pairs.size() + " blockNum : " + blockNum);		
 		if (pairs.size() > index.maxPointerNum) {
-			Log.v("splitting");
+			//Log.v("splitting");
 			List<IndexPair> newList = splitRight(pairs);
 			BPlusNode newBrother = new BPlusNode(keyType, index, level, false, isRightM);
 			newBrother.leftBrotherB = blockNum;
@@ -121,7 +121,7 @@ public class BPlusNode {
 	}
 	public BPlusAction doExchangeAction(BPlusExchangeAction changeA, BPlusAction res) {
 		int in;
-		IndexPair oldFirstP = null, pair = changeA.getFrom();
+		IndexPair oldFirstP = pairs.get(0), pair = changeA.getFrom();
 		for (in = 0;in < pairs.size();in++)
 			if (pairs.get(in).equals(pair))
 				break;

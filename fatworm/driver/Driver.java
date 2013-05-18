@@ -46,6 +46,7 @@ public class Driver implements java.sql.Driver{
 	 * cont- so the insert's performance is maximized, but update and scan depends on whether exists massive delete
 	 * for me, unique index is just index, because the data has no error
 	 * many types are both instance and factory, like tuple, FatType, IndexPair, beacause they carry type information
+	 * when does group, I half the buffersize to get memory.
 	 */
 	/*
 	 * implementation notes:
@@ -81,7 +82,9 @@ public class Driver implements java.sql.Driver{
 		}
 	}
 	public static final boolean logFile = false;
-	public static final int BLOCKLENGTH = 40;
+	public static final int BLOCKLENGTH = 409;
+	public static final int BUFFERSIZE = 10;
+	
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
 		// TODO Auto-generated method stub
@@ -127,7 +130,7 @@ public class Driver implements java.sql.Driver{
 		stmt.execute("create table test2(aa int not null auto_increment, " + 
 				"b varchar(3) default 'aaa')");
 		FatIndex testIndex = connection.dbMgr.dbs.get("test").getTable("test").createIndex("index1", "a");
-		for (int i = 1;i <= 4;i++)
+		for (int i = 20;i >= 1;i--)
 			testIndex.insertPair(new FatInteger(i), i);
 		testIndex.logBPlus();
 		stmt.execute("insert into test values (1, 'aa')");

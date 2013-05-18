@@ -6,13 +6,14 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.*;
 public class BufferManager {
-	public static final int BUFFERSIZE = 100000;
+	private int BUFFERSIZE;
 	int pageNumInBuffer;
 	fatworm.driver.Connection connection;
 	TreeMap<PageId, FatBlock> bufferMap;
 	TreeSet<TimePageId> queue;
 	public BufferManager(fatworm.driver.Connection c) {
 		connection = c;
+		BUFFERSIZE = Driver.BUFFERSIZE;
 		bufferMap = new TreeMap<PageId, FatBlock>();
 		pageNumInBuffer = 0;
 		queue = new TreeSet<TimePageId>();
@@ -36,6 +37,26 @@ public class BufferManager {
 			pageNumInBuffer--;
 		}
 	}
+	public void setBufferSize(int ss) {
+		//Log.v("before : " + bufferMap.size() + "page : " + pageNumInBuffer);
+		while (pageNumInBuffer > ss) {
+			TimePageId dump = queue.first();
+			queue.remove(dump);
+			dumpTimePageId(dump);
+			BUFFERSIZE = ss;
+		}
+		//Log.v("after : " + bufferMap.size());
+		System.gc();
+	}
+	private void dumpTimePageId(TimePageId dump) {
+		FatBlock dumpB = bufferMap.remove(dump.getPageId());
+		Log.assertTrue(dumpB != null);
+		if (dumpB.isDirty()) {
+			Log.assertTrue(dumpB.writeBack());
+		}
+		pageNumInBuffer--;
+		dumpB.setInBuffer(false);
+	}
 	public FatBlock getPage(PageId id) {
 		FatBlock fb = bufferMap.get(id);
 		//Log.v(pageNumInBuffer);
@@ -57,13 +78,7 @@ public class BufferManager {
 				e.printStackTrace();
 			}
 			Log.assertTrue(queue.remove(dump));
-			FatBlock dumpB = bufferMap.remove(dump.getPageId());
-			Log.assertTrue(dumpB != null);
-			if (dumpB.isDirty()) {
-				Log.assertTrue(dumpB.writeBack());
-			}
-			pageNumInBuffer--;
-			dumpB.setInBuffer(false);
+			dumpTimePageId(dump);
 		}
 		
 		RandomAccessFile raf = id.getFile();
