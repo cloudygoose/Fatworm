@@ -133,6 +133,23 @@ public class BPlusNode {
 		storeToFatBlock();
 		return res;
 	}
+	public BPlusAction doDeleteAction(BPlusDeleteAction delA, BPlusAction res) {
+		int in;
+		IndexPair oldFirstP = pairs.get(0), pair = delA.getDeletePair();
+		for (in = 0;in < pairs.size();in++)
+			if (pairs.get(in).equals(pair))
+				break;
+		pairs.remove(in);
+		if (isRoot()) {
+			storeToFatBlock();
+			return res;
+		}
+		if (!pairs.get(0).equals(pair))
+			res = addAction(res, new BPlusExchangeAction(new IndexPair(oldFirstP.getKey(), blockNum),
+					new IndexPair(pairs.get(0).getKey(), blockNum)));
+		storeToFatBlock();
+		return res;
+	}
 	private BPlusAction addAction(BPlusAction bp, BPlusAction np) {
 		if (bp == null)
 			return np;
