@@ -1,6 +1,7 @@
 package fatworm.index;
 import java.nio.ByteBuffer;
 
+import fatworm.log.Log;
 import fatworm.type.*;
 public class IndexPair {
 	FatType key;
@@ -31,6 +32,7 @@ public class IndexPair {
 		bb.putInt(fileOffset);
 	}
 	public IndexPair getInstanceFromByteBuffer(ByteBuffer bb) {
+		//Log.v("bytebuffer pos : " + bb.position());
 		IndexPair ip = new IndexPair(key.newInstanceFromByteBuffer(bb), bb.getInt());
 		return ip;
 	}

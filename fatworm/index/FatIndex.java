@@ -90,9 +90,9 @@ public class FatIndex implements Serializable {
 		if (rightPair == null)
 			return;
 		IndexPair leftPair = new IndexPair(root.pairs.get(0).getKey(), rootBlock);
-		
-		rootBlock = getNextNewBlockNumber();
+		maxLevel++;
 		root = new BPlusNode(keyType, this, 1, true, true);
+		rootBlock = root.blockNum;
 		root.doInsertAction(new BPlusInsertAction(leftPair), null);
 		root.doInsertAction(new BPlusInsertAction(rightPair), null);
 	}

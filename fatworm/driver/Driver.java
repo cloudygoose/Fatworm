@@ -59,6 +59,7 @@ public class Driver implements java.sql.Driver{
 	 * BufferManager.BUFFERSIZE the number of buffers in the page
 	 * Table.getTableCursor() return new RealTableCursor(name, records, schema, this); Whether table returns TableCursor or RealTableCursor
 	 * Driver.logFile boolean indicates whether Log to file
+	 * -1 in index means null marker, -2 in index means false delete
 	 */
 	static {
 		try {
@@ -126,7 +127,7 @@ public class Driver implements java.sql.Driver{
 		stmt.execute("create table test2(aa int not null auto_increment, " + 
 				"b varchar(3) default 'aaa')");
 		FatIndex testIndex = connection.dbMgr.dbs.get("test").getTable("test").createIndex("index1", "a");
-		for (int i = 1;i <= 2;i++)
+		for (int i = 1;i <= 4;i++)
 			testIndex.insertPair(new FatInteger(i), i);
 		testIndex.logBPlus();
 		stmt.execute("insert into test values (1, 'aa')");
