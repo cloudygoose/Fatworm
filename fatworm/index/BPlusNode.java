@@ -70,6 +70,30 @@ public class BPlusNode {
 		BPlusAction invoke = doAllActionInvoke(toDo);
 		return invoke;
 	}
+	public BPlusAction deletePair(IndexPair pair) {
+		if (isLeaf()) {
+			BPlusAction res = null;
+			res = doDeleteAction(new BPlusDeleteAction(pair), res);
+			return res;
+		}
+		int in = 0;
+		BPlusAction toDo = null;
+		while (in < pairs.size() && pairs.get(in).getKey().compareTo(pair.getKey()) <= 0) {
+			if (in == pairs.size() - 1 || pairs.get(in + 1).getKey().compareTo(pair.getKey()) >= 0) {
+				BPlusNode son = getInstanceFromFatBlock(pairs.get(in).fileOffset, keyType, index, level + 1, in == 0, in == pairs.size() - 1);
+				toDo = son.deletePair(pair);
+				if (toDo == null || !(toDo instanceof BPlusNotMeAction))
+					break;
+			}
+			++in;
+		}
+		if (toDo != null && toDo instanceof BPlusNotMeAction)
+			return new BPlusNotMeAction();
+		BPlusAction invoke = doAllActionInvoke(toDo);
+		if (invoke != null)
+			Log.assertTrue(!(invoke instanceof BPlusNotMeAction));
+		return invoke;
+	}
 	public BPlusAction doAllActionInvoke(BPlusAction action) {
 		//first exchange, then delete, then insert
 		BPlusAction res = new BPlusAction();
@@ -80,7 +104,15 @@ public class BPlusNode {
 				res = doExchangeAction((BPlusExchangeAction)action, res);
 			action = action.getNextAction();
 		}
-		//TODO:Delete
+		action = tmp;
+		//Delete
+		while (action != null) {
+			if (action instanceof BPlusDeleteAction) {
+				//Log.v("blockNum : " + blockNum);
+				res = doDeleteAction((BPlusDeleteAction)action, res);
+			}
+			action = action.getNextAction();
+		}
 		//Insert
 		action = tmp;
 		while (action != null) {
@@ -136,13 +168,58 @@ public class BPlusNode {
 	public BPlusAction doDeleteAction(BPlusDeleteAction delA, BPlusAction res) {
 		int in;
 		IndexPair oldFirstP = pairs.get(0), pair = delA.getDeletePair();
+		Log.v("do delete action : " + delA.deletePair.getPrint() + "  blockNum : " + blockNum);
 		for (in = 0;in < pairs.size();in++)
 			if (pairs.get(in).equals(pair))
 				break;
+		if (in == pairs.size())
+			return new BPlusNotMeAction();
 		pairs.remove(in);
 		if (isRoot()) {
 			storeToFatBlock();
 			return res;
+		}
+		if (pairs.size() < index.maxPointerNum / 2 && level > 1) {
+			BPlusNode brother;
+			boolean isBLeft;
+			//Assume always have a brother
+			//The two assignment below might be wrong, but I don't care 
+			if (!isLeftM) {
+				isBLeft = true;
+				brother = getInstanceFromFatBlock(leftBrotherB, keyType, index, level, false, false);
+			}
+			else {
+				isBLeft = false;
+				brother = getInstanceFromFatBlock(rightBrotherB, keyType, index, level, false, false);
+			}
+			if (brother.pairs.size() + this.pairs.size() <= index.maxPointerNum) {
+				//merge
+				if (!isBLeft) {
+					pairs.addAll(brother.pairs);
+					rightBrotherB = brother.rightBrotherB;
+				} else {
+					brother.pairs.addAll(pairs);
+					pairs = brother.pairs;
+					leftBrotherB = brother.leftBrotherB;
+				}
+				res = addAction(res, new BPlusDeleteAction(
+						new IndexPair(brother.pairs.get(0).getKey(), brother.blockNum)));
+				index.connection.bufferManager.dumpPageId(new PageId(index.fileName, brother.blockNum, index.file));
+			} else
+			{
+				//borrow one
+				if (!isBLeft) {
+					IndexPair rightOld = brother.pairs.remove(0);
+					pairs.add(rightOld);
+					if (!rightOld.equals(brother.pairs.get(0))) {
+						res = addAction(res, new BPlusExchangeAction(new IndexPair(rightOld.getKey(), brother.blockNum),
+								new IndexPair(brother.pairs.get(0).getKey(), brother.blockNum)));
+					}
+				} else {
+					this.pairs.add(0, brother.pairs.remove(brother.pairs.size() - 1));
+				}
+			}
+			brother.storeToFatBlock();
 		}
 		if (!pairs.get(0).equals(pair))
 			res = addAction(res, new BPlusExchangeAction(new IndexPair(oldFirstP.getKey(), blockNum),

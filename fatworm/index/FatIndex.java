@@ -1,4 +1,5 @@
 package fatworm.index;
+
 import java.io.File;
 
 
@@ -11,6 +12,7 @@ import fatworm.type.*;
 import fatworm.driver.Connection;
 import fatworm.driver.Driver;
 import fatworm.table.*;
+import fatworm.storage.*;
 public class FatIndex implements Serializable {
 	private static final long serialVersionUID = 26L;
 	Table table;
@@ -94,6 +96,19 @@ public class FatIndex implements Serializable {
 		rootBlock = root.blockNum;
 		root.doInsertAction(new BPlusInsertAction(leftPair), null);
 		root.doInsertAction(new BPlusInsertAction(rightPair), null);
+	}
+	public void deletePair(FatType key, Integer offset) {
+		BPlusNode root = getRoot();
+		IndexPair pair = new IndexPair(key, offset);
+		BPlusAction toDo = root.deletePair(pair);
+		if (toDo != null && toDo instanceof BPlusNotMeAction)
+			throw new DevelopException("delete not exist");
+		if (root.pairs.size() == 1 && this.maxLevel > 1) {
+			int newRoot = root.pairs.get(0).getFileOffset();
+			connection.bufferManager.dumpPageId(new PageId(fileName, root.blockNum, file));
+			rootBlock = newRoot;
+			maxLevel--;
+		}
 	}
 	private BPlusNode getRoot() {
 		return BPlusNode.getInstanceFromFatBlock(rootBlock, keyType, this, 1, true, true);

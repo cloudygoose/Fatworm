@@ -82,7 +82,7 @@ public class Driver implements java.sql.Driver{
 		}
 	}
 	public static final boolean logFile = false;
-	public static final int BLOCKLENGTH = 40;
+	public static final int BLOCKLENGTH = 50;
 	public static final int BUFFERSIZE = 10;
 	
 	@Override
@@ -130,8 +130,10 @@ public class Driver implements java.sql.Driver{
 		stmt.execute("create table test2(aa int not null auto_increment, " + 
 				"b varchar(3) default 'aaa')");
 		FatIndex testIndex = connection.dbMgr.dbs.get("test").getTable("test").createIndex("index1", "a");
-		for (int i = 1;i <= 10;i--)
+		for (int i = 1;i <= 10;i++)
 			testIndex.insertPair(new FatInteger(i), i);
+		for (int i = 1;i <= 2;i++)
+			testIndex.deletePair(new FatInteger(i), i);
 		testIndex.logBPlus();
 		stmt.execute("insert into test values (1, 'aa')");
 		stmt.execute("insert into test values (3, 'aa')");

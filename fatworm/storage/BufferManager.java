@@ -42,13 +42,13 @@ public class BufferManager {
 		while (pageNumInBuffer > ss) {
 			TimePageId dump = queue.first();
 			queue.remove(dump);
-			dumpTimePageId(dump);
+			dumpPageId(dump);
 			BUFFERSIZE = ss;
 		}
 		//Log.v("after : " + bufferMap.size());
 		System.gc();
 	}
-	private void dumpTimePageId(TimePageId dump) {
+	public void dumpPageId(PageId dump) {
 		FatBlock dumpB = bufferMap.remove(dump.getPageId());
 		Log.assertTrue(dumpB != null);
 		if (dumpB.isDirty()) {
@@ -78,7 +78,7 @@ public class BufferManager {
 				e.printStackTrace();
 			}
 			Log.assertTrue(queue.remove(dump));
-			dumpTimePageId(dump);
+			dumpPageId(dump);
 		}
 		
 		RandomAccessFile raf = id.getFile();
@@ -91,7 +91,7 @@ public class BufferManager {
 		}
 		TimePageId tpi = new TimePageId(id.getFileName(), id.getId(), id.getTable());
 		if (id.getTable() == null)
-			tpi.file = id.file; //only for RATFile
+			tpi.file = id.file; //only for RATFile and IndexBlocks(they don't have a table)
 		fb = new FatBlock(b, tpi);
 		queue.add(tpi);
 		fb.setInBuffer(true);

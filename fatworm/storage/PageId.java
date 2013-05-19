@@ -17,6 +17,9 @@ public class PageId implements Comparable, Serializable {
 		table = null;
 		file = f;
 	}
+	public PageId getPageId() {
+		return this;
+	}
 	public PageId(String fs, int i, Table t) {
 		fileName = fs;
 		id = i;
