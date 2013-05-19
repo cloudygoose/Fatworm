@@ -48,7 +48,7 @@ public class BufferManager {
 		//Log.v("after : " + bufferMap.size());
 		System.gc();
 	}
-	public void dumpPageId(PageId dump) {
+	private void dumpPageId(PageId dump) {
 		FatBlock dumpB = bufferMap.remove(dump.getPageId());
 		Log.assertTrue(dumpB != null);
 		if (dumpB.isDirty()) {

@@ -105,7 +105,7 @@ public class FatIndex implements Serializable {
 			throw new DevelopException("delete not exist");
 		if (root.pairs.size() == 1 && this.maxLevel > 1) {
 			int newRoot = root.pairs.get(0).getFileOffset();
-			connection.bufferManager.dumpPageId(new PageId(fileName, root.blockNum, file));
+			//connection.bufferManager.dumpPageId(new PageId(fileName, root.blockNum, file));
 			rootBlock = newRoot;
 			maxLevel--;
 		}

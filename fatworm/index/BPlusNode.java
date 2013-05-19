@@ -128,8 +128,15 @@ public class BPlusNode {
 		if (pairs.size() > 0)
 			oldFirstP = pairs.get(0);
 		int in = 0;
-		while (in < pairs.size() && pairs.get(in).getKey().compareTo(pair.getKey()) < 0)
+		//the split-insert must be inserted at a specified position
+		if (insertA.getBeforeBlock() != null) {
+			while (in < pairs.size() && pairs.get(in).getFileOffset() != insertA.getBeforeBlock())
+				++in;
 			++in;
+		} else {
+			while (in < pairs.size() && pairs.get(in).getKey().compareTo(pair.getKey()) <= 0)
+				++in;
+		}
 		//Log.v("before : in : " + in + " pairs.size() : " + pairs.size() + " blockNum : " + blockNum);		
 		pairs.add(in, pair);
 		//Log.v("after : in : " + in + " pairs.size() : " + pairs.size() + " blockNum : " + blockNum);		
@@ -141,7 +148,7 @@ public class BPlusNode {
 			newBrother.rightBrotherB = rightBrotherB;
 			rightBrotherB = newBrother.blockNum;
 			newBrother.pairs = newList;
-			res = addAction(res, new BPlusInsertAction(new IndexPair(newList.get(0).getKey(), newBrother.blockNum)));
+			res = addAction(res, new BPlusInsertAction(new IndexPair(newList.get(0).getKey(), newBrother.blockNum), this.blockNum));
 			isRightM = false;
 			newBrother.storeToFatBlock();
 		}
@@ -168,7 +175,7 @@ public class BPlusNode {
 	public BPlusAction doDeleteAction(BPlusDeleteAction delA, BPlusAction res) {
 		int in;
 		IndexPair oldFirstP = pairs.get(0), pair = delA.getDeletePair();
-		Log.v("do delete action : " + delA.deletePair.getPrint() + "  blockNum : " + blockNum);
+		//Log.v("do delete action : " + delA.deletePair.getPrint() + "  blockNum : " + blockNum);
 		for (in = 0;in < pairs.size();in++)
 			if (pairs.get(in).equals(pair))
 				break;
@@ -204,7 +211,8 @@ public class BPlusNode {
 				}
 				res = addAction(res, new BPlusDeleteAction(
 						new IndexPair(brother.pairs.get(0).getKey(), brother.blockNum)));
-				index.connection.bufferManager.dumpPageId(new PageId(index.fileName, brother.blockNum, index.file));
+				//no need to dump!!
+				//				index.connection.bufferManager.dumpPageId(new PageId(index.fileName, brother.blockNum, index.file));
 			} else
 			{
 				//borrow one
@@ -293,8 +301,10 @@ public class BPlusNode {
 		if (isLeaf()) {
 			for (int i = 0;i < pairs.size();i++)
 				Log.v(pairs.get(i).getPrint());
+			Log.v("Above Leaf!!");
 			return;
 		}
+		
 		for (int i = 0;i < pairs.size();i++) {
 			BPlusNode son = getInstanceFromFatBlock(pairs.get(i).getFileOffset(), keyType, index, level + 1, i == 0, i == pairs.size() - 1);
 			son.LogBPlus();
