@@ -201,13 +201,24 @@ public class BPlusNode {
 			}
 			if (brother.pairs.size() + this.pairs.size() <= index.maxPointerNum) {
 				//merge
-				if (!isBLeft) {
+				//Log.v("blockNum : " + blockNum + " merging : " + brother.blockNum);
+ 				if (!isBLeft) {
 					pairs.addAll(brother.pairs);
 					rightBrotherB = brother.rightBrotherB;
+					if (rightBrotherB != -1) {
+						BPlusNode rBB = getInstanceFromFatBlock(rightBrotherB, keyType, index, level, false, false); //these two boolean might be wrong
+						rBB.leftBrotherB = blockNum;
+						rBB.storeToFatBlock();
+					}
 				} else {
 					brother.pairs.addAll(pairs);
 					pairs = brother.pairs;
 					leftBrotherB = brother.leftBrotherB;
+					if (leftBrotherB != -1) {
+						BPlusNode lBB = getInstanceFromFatBlock(leftBrotherB, keyType, index, level, false, false); //these two boolean might be wrong
+						lBB.rightBrotherB = blockNum;
+						lBB.storeToFatBlock();
+					}
 				}
 				res = addAction(res, new BPlusDeleteAction(
 						new IndexPair(brother.pairs.get(0).getKey(), brother.blockNum)));
@@ -229,7 +240,7 @@ public class BPlusNode {
 			}
 			brother.storeToFatBlock();
 		}
-		if (!pairs.get(0).equals(pair))
+		if (!pairs.get(0).equals(oldFirstP))
 			res = addAction(res, new BPlusExchangeAction(new IndexPair(oldFirstP.getKey(), blockNum),
 					new IndexPair(pairs.get(0).getKey(), blockNum)));
 		storeToFatBlock();
@@ -298,6 +309,7 @@ public class BPlusNode {
 	}
 	public void LogBPlus() {
 		Log.v("logging BPlus block: " + blockNum + " level : " + level + " maxLevel : " + index.maxLevel);
+		Log.v(" leftB : " + leftBrotherB + " rightB : " + rightBrotherB);
 		if (isLeaf()) {
 			for (int i = 0;i < pairs.size();i++)
 				Log.v(pairs.get(i).getPrint());

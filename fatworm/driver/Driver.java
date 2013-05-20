@@ -129,18 +129,7 @@ public class Driver implements java.sql.Driver{
 				"b varchar(3) default 'aaa', primary key(a))");
 		stmt.execute("create table test2(aa int not null auto_increment, " + 
 				"b varchar(3) default 'aaa')");
-		FatIndex testIndex = connection.dbMgr.dbs.get("test").getTable("test").createIndex("index1", "a");
-		for (int i = 1;i <= 10;i++) {
-			testIndex.insertPair(new FatInteger(i), i);
-			testIndex.insertPair(new FatInteger(i), i + 10);
-			testIndex.insertPair(new FatInteger(i), i + 20);
-			testIndex.insertPair(new FatInteger(i), i + 30);
-			testIndex.insertPair(new FatInteger(i), i + 40);
-			testIndex.insertPair(new FatInteger(i), i + 50);
-		}
-		for (int i = 10;i >= 1;i--)
-			testIndex.deletePair(new FatInteger(i), i + 50);
-		testIndex.logBPlus();
+		//FatIndex testIndex = connection.dbMgr.dbs.get("test").getTable("test").createIndex("index1", "a");
 		stmt.execute("insert into test values (1, 'aa')");
 		stmt.execute("insert into test values (3, 'aa')");
 		stmt.execute("insert into test (a) values(2)");
