@@ -74,8 +74,10 @@ public class ResultSet implements java.sql.ResultSet {
 	public void setScan(Scan s) {
 		try {
 			scan = s;
-			if (s == null)
+			if (s == null) {
+				ex = null;
 				return;
+			}
 			ex = s.generateExTuple();
 			s.open();
 		}catch (Exception e) {

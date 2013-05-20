@@ -4,6 +4,7 @@ import java.io.File;
 
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 
@@ -110,9 +111,17 @@ public class FatIndex implements Serializable {
 			maxLevel--;
 		}
 	}
+	public void close() {
+		try {
+			file.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	//set to be only called by fatworm.table.drop
 	public void drop() {
-		
+		File f = new File(fileName);
+		f.delete();
 	}
 	private BPlusNode getRoot() {
 		return BPlusNode.getInstanceFromFatBlock(rootBlock, keyType, this, 1, true, true);

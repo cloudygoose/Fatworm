@@ -39,6 +39,8 @@ public class TupleComparator {
 			for (int i = 0;i < t1.size();i++) {
 				if (t1.get(i).getValue().compareTo(t2.get(i).getValue()) > 0)
 					return true;
+				if (t1.get(i).getValue().compareTo(t2.get(i).getValue()) < 0)
+					return false;
 			}
 		}
 		return false;

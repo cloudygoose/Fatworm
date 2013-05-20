@@ -61,6 +61,10 @@ public class FatDecimal extends FatType implements Serializable {
 	}
 	@Override
 	public void storeIntoByteBuffer(ByteBuffer bb) {
+		if (this.isNull)
+			bb.put((byte)1);
+		else
+			bb.put((byte)0);
 		String s = number.toPlainString();
 		if (s.length() > serialLength)
 			s = s.substring(0, serialLength);
@@ -84,12 +88,16 @@ public class FatDecimal extends FatType implements Serializable {
 			f.isNull = true;
 		int len = bb.getInt();
 		byte[] bs = new byte[len];
+		Log.assertTrue(len <= serialLength);
 		bb.get(bs, 0, len);
 		if (serialLength - len > 0) {
 			byte[] tmp = new byte[serialLength - len];
 			bb.get(tmp);
 		}
-		f.number = new BigDecimal(new String(bs));
+		if (f.isNull)
+			f.number = new BigDecimal(0);
+		else
+			f.number = new BigDecimal(new String(bs));
 		return f;
 	}
 	@Override

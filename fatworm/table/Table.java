@@ -89,8 +89,11 @@ public class Table implements Serializable {
 	}
 	public void close() {
 		try {
+			Iterator<FatIndex> iter = indexs.values().iterator();
+			while (iter.hasNext())
+				iter.next().close();
 			file.close();
-			Log.v(fileName + " file closed!!!!(by close)");
+			//Log.v(fileName + " file closed!!!!(by close)");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -98,14 +101,13 @@ public class Table implements Serializable {
 	public void drop() {
 		connection.bufferManager.dumpAll(fileName);
 		Iterator<FatIndex> indexIter = indexs.values().iterator();
-		while (indexIter.hasNext()) {
+		while (indexIter.hasNext()) 
 			indexIter.next().drop();
-		}
 		try {
 			file.close();
 			File newFile = new File(fileName);
 			newFile.delete();
-			Log.v(fileName + " file closed!!!!(by drop)");
+			//Log.v(fileName + " file closed!!!!(by drop)");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -116,7 +118,8 @@ public class Table implements Serializable {
 			if (schema.getColumn(k).getName().equals(colName))
 				break;
 		FatIndex index = new FatIndex(indexName, this, colName, schema.getColumn(k).getType(), connection);
-		Log.assertTrue(indexs.get(colName) == null);
+		if (indexs.get(colName) != null)
+			return indexs.get(colName);
 		indexs.put(colName, index);
 		return index;
 	}

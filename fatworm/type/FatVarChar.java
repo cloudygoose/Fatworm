@@ -52,6 +52,8 @@ public class FatVarChar extends FatType implements Serializable {
 //		Log.v(ss.toString());
 		if (ss instanceof StringLiteral) {
 			fvc.s = ((StringLiteral)ss).getString();  
+			if (fvc.s.length() > length)
+				fvc.s = fvc.s.substring(0, length);
 			return fvc;
 		} else
 		throw new DevelopException();
@@ -60,6 +62,7 @@ public class FatVarChar extends FatType implements Serializable {
 	public FatVarChar newNullInstance() {
 		FatVarChar b = new FatVarChar(-1);
 		b.isNull = true;
+		b.s = "";
 		return b;
 	}
 
@@ -70,14 +73,15 @@ public class FatVarChar extends FatType implements Serializable {
 		FatVarChar fvc = new FatVarChar(length);
 //		Log.v(ss.toString());
 		if (ss instanceof FatChar) {
-			fvc.s = ((FatChar)ss).getString();  
-			return fvc;
+			fvc.s = ((FatChar)ss).getString();
 		} else
 		if (ss instanceof FatVarChar) {
 			fvc.s = ((FatVarChar)ss).getString();
-			return fvc;
 		} else
 		throw new DevelopException();
+		if (fvc.s.length() > length)
+			fvc.s = fvc.s.substring(0, length);
+		return fvc;
 	}
 	@Override
 	public FatType newZeroInstance() {

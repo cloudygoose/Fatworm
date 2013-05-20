@@ -48,6 +48,8 @@ public class Connection implements java.sql.Connection{
 		logicPlanner = new LogicPlanner(this);
 		bufferManager = new BufferManager(this);
 		url = u;
+		Log.v(url);
+		folder = url.substring(14, u.length());
 		Log.openFile(Driver.logFile);
 //		dbMgr = new DatabaseMgr();
 		try {

@@ -41,8 +41,8 @@ public class SortScan extends Scan {
 		iter = -1;
 		for (int i = 0;i < tuples.size() - 1;i++)
 			for (int j = i + 1;j < tuples.size();j++) {
-				//Log.v(tuples.get(j).getPrint() + " " + tuples.get(i).getPrint() + " " + 
-				//		comparator.bigger(tuples.get(j), tuples.get(i)));
+			//	Log.v("comparing : " + tuples.get(j).getPrint() + " " + tuples.get(i).getPrint() + " " + 
+			//			comparator.bigger(tuples.get(j), tuples.get(i)));
 				
 				if (comparator.bigger(tuples.get(j), tuples.get(i)))
 				{
@@ -52,6 +52,8 @@ public class SortScan extends Scan {
 				}
 			}
 		nextT = null;
+		//for (int i = 0;i < tuples.size();i++)
+		//Log.v("sortScan log : " + tuples.get(i).getPrint());
 	}
 	@Override
 	public void close() {

@@ -65,17 +65,20 @@ public class FatChar extends FatType implements Serializable {
 			return newNullInstance();
 		FatChar fc = new FatChar(length);
 		String s1;
-		if (ss instanceof FatChar) 
+		if (ss instanceof FatChar) {
 			s1 = ((FatChar)ss).getString();
+			//Log.v("seeingFatChar!!");
+		}
 		else throw new DevelopException();
 
 		fc.s = s1;
 		if (length == -1)
 			return fc;
+		int sl = s1.length();
 		if (s1.length() < length)
-			for (int j = 0;j < length - s1.length();j++)
+			for (int j = 0;j < length - sl;j++)
 				s1 = s1 + " ";
-		if (s1.length() > length)
+		if (sl > length)
 			s1 = s1.substring(0, length);
 		fc.s = s1;
 
@@ -85,17 +88,19 @@ public class FatChar extends FatType implements Serializable {
 	public FatChar newInstance(Expression ss) throws Exception {
 		FatChar fc = new FatChar(length);
 		String s1;
-		if (ss instanceof StringLiteral) 
+		if (ss instanceof StringLiteral) {
 			s1 = ((StringLiteral)ss).getString();
+		}
 		else throw new DevelopException();
 
 		fc.s = s1;
 		if (length == -1)
 			return fc;
+		int sl = s1.length();
 		if (s1.length() < length)
-			for (int j = 0;j < length - s1.length();j++)
+			for (int j = 0;j < length - sl;j++)
 				s1 = s1 + " ";
-		if (s1.length() > length)
+		if (sl > length)
 			s1 = s1.substring(0, length);
 		fc.s = s1;
 		return fc;

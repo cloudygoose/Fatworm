@@ -10,7 +10,7 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData{
 	}
 	public int getColumnCount() {
 		if (tuple == null)
-			return -1;
+			return 0;
 		return tuple.size();
 	}
 	public int getColumnType(int columnIndex) {

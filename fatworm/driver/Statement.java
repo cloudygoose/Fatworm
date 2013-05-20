@@ -35,6 +35,7 @@ public class Statement implements java.sql.Statement {
 		ParserManager parserManager = connection.parserManager;
 		LogicPlanner logicPlanner = connection.logicPlanner;
 		CommonTree t = parserManager.getCommonTree(sql); // get tree from parser
+		scan = null;
 		try {
 			//Log.v("now running sql : " + sql);
 			//parserManager.LogAST(t, "");
@@ -105,6 +106,11 @@ public class Statement implements java.sql.Statement {
 			if (isCreateIndex(t)) {
 				CreateIndexExecutor executor = new CreateIndexExecutor(t, this);
 				executor.execute();
+			} else
+			if (isDropIndex(t)) {
+				//This Executor doesn't do anything
+				DropIndexExecutor executor = new DropIndexExecutor(t, this);
+				executor.execute();
 			}
 			else
 			throw new DevelopException("top level : Unknown query");
@@ -130,6 +136,13 @@ public class Statement implements java.sql.Statement {
 		CommonTree tr = (CommonTree)t;
 		String s = FatwormParser.tokenNames[tr.getType()];
 		if (s.equals("CREATE_TABLE"))
+			return true;
+		return false;		
+	}
+	public static boolean isDropIndex(Tree t) {
+		CommonTree tr = (CommonTree)t;
+		String s = FatwormParser.tokenNames[tr.getType()];
+		if (s.equals("DROP_INDEX"))
 			return true;
 		return false;		
 	}

@@ -27,10 +27,10 @@ public class RATFileCursor {
 		connection = c;
 	}
 	public void newFileInit() {
-		fileName = "tmp" + tmpAll.toString();
+		fileName = connection.folder + File.separator + "tmp" + tmpAll.toString();
 		tmpAll++;
 		try {
-			file = new RandomAccessFile(connection.folder + File.separator + fileName, "rw");
+			file = new RandomAccessFile(fileName, "rw");
 			nowB = 0;
 			nowP = 0;
 			nowBlock = null;
@@ -88,6 +88,8 @@ public class RATFileCursor {
 		try {
 			connection.bufferManager.dumpAll(fileName);
 			file.close();
+			File f = new File(fileName);
+			f.delete();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

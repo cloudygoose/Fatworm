@@ -37,7 +37,7 @@ public class Driver implements java.sql.Driver{
 	/*
 	 * TODO:
 	 * createIndex should scan all the tuples in the table
-	 * FatIndex.drop
+	 * Char delete the rightmost ' 's
 	 */
 	
 	/*
@@ -61,7 +61,9 @@ public class Driver implements java.sql.Driver{
 	 * BufferManager.BUFFERSIZE the number of buffers in the page
 	 * Table.getTableCursor() return new RealTableCursor(name, records, schema, this); Whether table returns TableCursor or RealTableCursor
 	 * Driver.logFile boolean indicates whether Log to file
-	 * -1 in index means null marker, -2 in index means false delete
+	 * I don't drop index because I didn't save the name of the index, 
+	 * cont- I drop them when I drop tables
+	 * I didn't know how many ' 's I added to a CHAR value, when selected, I delete all of them. 
 	 */
 	static {
 		try {
@@ -131,6 +133,7 @@ public class Driver implements java.sql.Driver{
 		stmt.execute("create table test2(aa int not null auto_increment, " + 
 				"b varchar(3) default 'aaa')");
 		//FatIndex testIndex = connection.dbMgr.dbs.get("test").getTable("test").createIndex("index1", "a");
+		stmt.execute("create index fyc on test(a)");
 		stmt.execute("insert into test values (1, 'aa')");
 		stmt.execute("insert into test values (3, 'aa')");
 		stmt.execute("insert into test (a) values(2)");
@@ -138,7 +141,10 @@ public class Driver implements java.sql.Driver{
 		stmt.execute("insert into test values (3, 'aa')");
 		stmt.execute("insert into test (a) values(2)");
 		stmt.execute("select * from test order by a");
-		//		stmt.execute("insert into test2 (select * from test)");
+		stmt.execute("drop index fyc on test");
+		stmt.execute("drop table test");
+		stmt.execute("drop table test2");
+//		stmt.execute("insert into test2 (select * from test)");
 //		stmt.execute("select * from test2");
 //		stmt.execute("insert into test (select * from test)");
 		connection.close();
