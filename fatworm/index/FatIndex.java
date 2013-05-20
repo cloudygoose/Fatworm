@@ -110,6 +110,10 @@ public class FatIndex implements Serializable {
 			maxLevel--;
 		}
 	}
+	//set to be only called by fatworm.table.drop
+	public void drop() {
+		
+	}
 	private BPlusNode getRoot() {
 		return BPlusNode.getInstanceFromFatBlock(rootBlock, keyType, this, 1, true, true);
 	}

@@ -97,8 +97,14 @@ public class Table implements Serializable {
 	}
 	public void drop() {
 		connection.bufferManager.dumpAll(fileName);
+		Iterator<FatIndex> indexIter = indexs.values().iterator();
+		while (indexIter.hasNext()) {
+			indexIter.next().drop();
+		}
 		try {
 			file.close();
+			File newFile = new File(fileName);
+			newFile.delete();
 			Log.v(fileName + " file closed!!!!(by drop)");
 		} catch (IOException e) {
 			e.printStackTrace();

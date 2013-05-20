@@ -37,6 +37,7 @@ public class Driver implements java.sql.Driver{
 	/*
 	 * TODO:
 	 * createIndex should scan all the tuples in the table
+	 * FatIndex.drop
 	 */
 	
 	/*
@@ -66,7 +67,7 @@ public class Driver implements java.sql.Driver{
 		try {
 			Driver d = new Driver();
 			java.sql.DriverManager.registerDriver(d);
-			
+			/*
 			try {
 				d.test();
 			} catch (IOException e) {
@@ -76,14 +77,14 @@ public class Driver implements java.sql.Driver{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+			*/
 		} catch (SQLException e) {
 			throw new RuntimeException("Can't register driver!");
 		}
 	}
 	public static final boolean logFile = false;
-	public static final int BLOCKLENGTH = 50;
-	public static final int BUFFERSIZE = 10;
+	public static final int BLOCKLENGTH = 4096;
+	public static final int BUFFERSIZE = 500000;
 	
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
