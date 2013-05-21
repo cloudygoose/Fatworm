@@ -4,17 +4,18 @@ import fatworm.scan.*;
 public class ProjectPlan extends Plan {
 	Plan source;
 	ExpList expList;
-	fatworm.driver.Connection connection;
 	public Plan getSource() {
 		return source;
 	}
 	public ExpList getExpList() {
 		return expList;
 	}
+	public void setSource(Plan p) {
+		source = p;
+	}
 	public ProjectPlan(ExpList lis, Plan s, fatworm.driver.Connection c) {
 		connection = c;
 		source = s;
-		s.setFather(this);
 		expList = lis;
 	}
 	@Override

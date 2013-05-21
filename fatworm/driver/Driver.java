@@ -36,18 +36,35 @@ import fatworm.index.*;
 public class Driver implements java.sql.Driver{
 	/*
 	 * TODO:
+	 * Now: condition push-down
 	 * createIndex should scan all the tuples in the table
-	 * Char delete the rightmost ' 's
+	 * Index's update, delete, and insert
+	 * Index's opt
 	 */
-	
 	/*
+	 * For test, just run Driver.test() , you need to modify Statement.java
 	 * do not support transaction and concurrency
-	 * I use RATFile to do the File-qsort instead of the standard file-merge sort
+	 * for me, unique index is just index, because the data has no error
 	 * the tuples in table is fixed-length so the updates and insert are very easy, and so I don't need pointers for table-file
 	 * cont- so the insert's performance is maximized, but update and scan depends on whether exists massive delete
-	 * for me, unique index is just index, because the data has no error
-	 * many types are both instance and factory, like tuple, FatType, IndexPair, beacause they carry type information
-	 * when does group, I half the buffersize to get memory.
+	 * FILEQSORT
+	 * cont- I use RATFile to do the File-qsort instead of the standard file-merge sort
+	 * FACTORY
+	 * cont- many types are both instance and factory, like tuple, FatType, IndexPair, beacause they carry type information
+	 * MEMORY
+	 * cont- when does group, I half the buffersize to get memory.
+	 * REFLEX
+	 * cont- The JavaReflex is used to:
+	 * cont- find funcs for group query
+	 * cont- find the domain of a expression and find whether the expression contains a subquery 
+	 * GENERATETUPLE
+	 * cont- The generateTuple() in each scan is a powerful method(get from a sandbox) that could get the schema of this scan
+	 * OPT
+	 * cont- OPT is done on PLAN level, although it uses the generateTuple in the scanLevel
+	 * cont- OPT:Driver.addSlotPlan
+	 * cont- first, every tablePlan and product plan gets a SlotPlan as its father as long as it doesn't have s SelectPlan as its father
+	 * cont- the pushdown process stops at : projectplan,groupplan,OneTuplePlan,AliasPlan
+	 * cont- the pushdown add a SlotPlan above a ProjectPlan, a FetchTable, ProductPlan
 	 */
 	/*
 	 * implementation notes:
@@ -63,14 +80,14 @@ public class Driver implements java.sql.Driver{
 	 * Driver.logFile boolean indicates whether Log to file
 	 * I don't drop index because I didn't save the name of the index, 
 	 * cont- I drop them when I drop tables
-	 * I didn't know how many ' 's I added to a CHAR value, when selected, I delete all of them.
+	 * I didn't know store the number of many ' 's I added to a CHAR value, when selected, I delete all of them.
 	 * cont - This is done in ResultSet 
 	 */
 	static {
 		try {
 			Driver d = new Driver();
 			java.sql.DriverManager.registerDriver(d);
-			
+			/*
 			try {
 				d.test();
 			} catch (IOException e) {
@@ -80,15 +97,17 @@ public class Driver implements java.sql.Driver{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+			*/
 		} catch (SQLException e) {
 			throw new RuntimeException("Can't register driver!");
 		}
 	}
-	public static final boolean logFile = false;
 	public static final int BLOCKLENGTH = 4096;
 	public static final int BUFFERSIZE = 500000;
-	
+	public static final boolean logFile = false;
+	public static final boolean addSlotPlan = true;
+	public static final boolean logPlanTree = false;
+	public static final boolean logScanTree = false;
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
 		// TODO Auto-generated method stub

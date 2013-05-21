@@ -6,10 +6,12 @@ import fatworm.expression.*;
 import fatworm.scan.*;
 
 public class OrderPlan extends Plan{
-	fatworm.driver.Connection connection;
 	ArrayList<IdExpression> idList;
 	ArrayList<Boolean> ascList;
 	Plan source;
+	public void setSource(Plan p) {
+		source = p;
+	}
 	public Plan getSource() {
 		return source;
 	}

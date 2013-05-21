@@ -6,31 +6,34 @@ import org.antlr.runtime.tree.CommonTree;
 import fatworm.log.Log;
 import fatworm.scan.*;
 public class ProductPlan extends Plan{
-	fatworm.driver.Connection connection;
-	Plan s1;
-	Plan s2;
+	Plan sa;
+	Plan sb;
 	public Plan getSa() {
-		return s1;
+		return sa;
 	}
 	public Plan getSb() {
-		return s2;
+		return sb;
+	}
+	public void setSa(Plan p) {
+		sa = p;
+	}
+	public void setSb(Plan p) {
+		sb = p;
 	}
 	/*
 	 * construct from a FromClause
 	 */
 	public ProductPlan(Plan p1, Plan p2, fatworm.driver.Connection c) {
 		connection = c;
-		s1 = p1; s2 = p2;
-		p1.setFather(this);
-		p2.setFather(this);
+		sa = p1; sb = p2;
 	}
 	@Override
 	public String getPrint(int old) throws Exception {
 		return padding(old) + "ProductPlan(\n" + 
-				s1.getPrint(old + 1) + 
-				s2.getPrint(old + 1) + padding(old) + ")Product\n";
+				sa.getPrint(old + 1) + 
+				sb.getPrint(old + 1) + padding(old) + ")Product\n";
 	}
 	public Scan getScan() throws Exception {
-		return new ProductScan(s1.getScan(), s2.getScan(), connection);
+		return new ProductScan(sa.getScan(), sb.getScan(), connection);
 	}
 }

@@ -1,11 +1,13 @@
 package fatworm.logicplan;
 import fatworm.scan.*;
 public class AliasPlan extends Plan {
-	fatworm.driver.Connection connection;
 	private String alias;
 	private Plan source;
 	public Plan getSource() {
 		return source;
+	}
+	public void setSource(Plan p) {
+		source = p;
 	}
 	public String getAlias() {
 		return alias;
@@ -14,7 +16,6 @@ public class AliasPlan extends Plan {
 		alias = change;
 		source = s;
 		connection = c;
-		s.setFather(this);
 	}
 	@Override
 	public String getPrint(int old) throws Exception {

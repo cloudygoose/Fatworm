@@ -4,7 +4,7 @@ import org.antlr.runtime.tree.CommonTree;
 
 import fatworm.driver.Statement;
 import fatworm.expression.Expression;
-import fatworm.log.Log;
+import fatworm.log.*;
 import fatworm.table.Column;
 import fatworm.table.Table;
 import fatworm.table.TableCursor;
@@ -70,17 +70,20 @@ public class InsertColumnsExecutor extends Executor {
 				if (c.getAutoIncrement()) {
 					v = c.getAutoValueAfterInc();
 				} else {
-					if (c.getType() instanceof FatDateTime) {
-						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-						String s = dateFormat.format(new java.util.Date()).toString();
-						java.sql.Timestamp date = new java.sql.Timestamp(dateFormat.parse(s).getTime()); 
-						v = new FatDateTime(date);
-					} else
-					if (c.getType() instanceof FatTimeStamp) {
-						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-						String s = dateFormat.format(new java.util.Date()).toString();
-						java.sql.Timestamp ss = new java.sql.Timestamp(dateFormat.parse(s).getTime()); 
-						v = new FatTimeStamp(ss);
+					if (c.getNotNull()) {
+						if (c.getType() instanceof FatDateTime) {
+							SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+							String s = dateFormat.format(new java.util.Date()).toString();
+							java.sql.Timestamp date = new java.sql.Timestamp(dateFormat.parse(s).getTime()); 
+							v = new FatDateTime(date);
+						} else
+						if (c.getType() instanceof FatTimeStamp) {
+							SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+							String s = dateFormat.format(new java.util.Date()).toString();
+							java.sql.Timestamp ss = new java.sql.Timestamp(dateFormat.parse(s).getTime()); 
+							v = new FatTimeStamp(ss);
+						} else
+						throw new DevelopException();
 					}
 					else {
 						v = c.getType().newNullInstance();

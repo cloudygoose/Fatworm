@@ -60,6 +60,15 @@ public class FatTimeStamp extends FatType implements Serializable {
 	public FatTimeStamp newNullInstance() {
 		FatTimeStamp b = newZeroInstance();
 		b.isNull = true;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		String s = dateFormat.format(new java.util.Date()).toString();
+		java.sql.Timestamp ss = null;
+		try {
+			ss = new java.sql.Timestamp(dateFormat.parse(s).getTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} 
+		b.timeStamp = ss;
 		return b;
 	}
 	@Override

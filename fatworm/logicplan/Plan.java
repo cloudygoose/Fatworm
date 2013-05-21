@@ -11,10 +11,22 @@ import fatworm.log.DevelopException;
 import fatworm.log.Log;
 import fatworm.scan.*;
 public class Plan {
-	Plan fatherPlan;
+	protected fatworm.driver.Connection connection;
+	protected boolean addedSlot = false;
+	public boolean getAddedSlot() {
+		return addedSlot;
+	}
+	public void setAddedSlot() {
+		addedSlot = true;
+	}
+	public fatworm.driver.Connection getConnection() {
+		return connection;
+	}
+	/*
 	public void setFather(Plan father) {
 		fatherPlan = father;
 	}
+	*/
 	public String getPrint(int old) throws Exception {
 		throw new DevelopException();
 	}

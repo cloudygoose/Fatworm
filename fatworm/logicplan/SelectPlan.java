@@ -4,22 +4,34 @@ import fatworm.expression.Expression;
 import fatworm.scan.*;
 
 public class SelectPlan extends Plan{
-	fatworm.driver.Connection connection;
 	Plan source;
 	Expression exp;
+	boolean hasBeenPushDowned;
+	public boolean getHasBeenPushDowned() {
+		return hasBeenPushDowned;
+	}
 	public Plan getSource() {
 		return source;
 	}
+	public Expression getExp() {
+		return exp;
+	}
+	public void setSource(Plan p) {
+		source = p;
+	}
 	public Expression getCondition() {
 		return exp;
+	}
+	public void setBeenPushDown() {
+		hasBeenPushDowned = true;
 	}
 	/*
 	 * construct from a FromClause
 	 */
 	public SelectPlan(Plan s, Expression e, fatworm.driver.Connection c) {
 		connection = c;
-		s.setFather(this);
 		source = s; exp = e;
+		hasBeenPushDowned = false;
 	}
 	@Override
 	public String getPrint(int old) throws Exception {

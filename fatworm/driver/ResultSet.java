@@ -47,8 +47,14 @@ public class ResultSet implements java.sql.ResultSet {
 		if (f instanceof fatworm.type.FatBoolean)
 			return ((FatBoolean)f).getBool();
 		else 
-		if (f instanceof fatworm.type.FatChar)
-			return ((FatChar)f).getString();
+		if (f instanceof fatworm.type.FatChar) {
+			String s = ((FatChar)f).getString();
+			int len = s.length();
+			while (len > 0 && s.charAt(len - 1) == ' ')
+				len--;
+			s = s.substring(0, len);
+			return s;
+		}
 		else 
 		if (f instanceof fatworm.type.FatDateTime)
 			return ((FatDateTime)f).getDate();

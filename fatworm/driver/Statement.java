@@ -13,6 +13,7 @@ import fatworm.executor.*;
 import fatworm.log.DevelopException;
 import fatworm.log.Log;
 import fatworm.logicplan.Plan;
+import fatworm.opt.AddSlotToPlan;
 import fatworm.parser.FatwormParser;
 import fatworm.parser.ParserManager;
 import fatworm.planner.LogicPlanner;
@@ -42,10 +43,14 @@ public class Statement implements java.sql.Statement {
 			//Log.v("============AST complete.===============");
 			if (isQuery(t)) {
 				Plan p = logicPlanner.translate(t);
-				//Log.v("\n" + p.getPrint(0));
+				if (Driver.addSlotPlan)
+					AddSlotToPlan.addSlotToPlan(p);
+				if (Driver.logPlanTree)
+					Log.v("\n" + p.getPrint(0));
 				
 				scan = p.getScan();
-				//Log.v("\n" + scan.getPrint(0));
+				if (Driver.logScanTree)
+					Log.v("\n" + scan.getPrint(0));
 				/*
 				LinkedList<FuncExp> list = new LinkedList<FuncExp>();
 				Log.getAllFunc(scan, list);

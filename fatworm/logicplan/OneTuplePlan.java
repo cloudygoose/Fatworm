@@ -3,7 +3,6 @@ import fatworm.scan.*;
 import fatworm.driver.*;
 //Used for "select const";
 public class OneTuplePlan extends Plan{
-	private fatworm.driver.Connection connection;
 	public OneTuplePlan(fatworm.driver.Connection c) {
 		connection = c;
 	}

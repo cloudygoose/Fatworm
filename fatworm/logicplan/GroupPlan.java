@@ -3,11 +3,13 @@ import fatworm.expression.*;
 import fatworm.scan.*;
 
 public class GroupPlan extends Plan {
-	fatworm.driver.Connection connection;
 	Plan source;
 	ExpList expList;
 	IdExpression idExp;
 	Expression having;
+	public void setSource(Plan p) {
+		source = p;
+	}
 	public Plan getSource() {
 		return source;
 	}
@@ -25,7 +27,6 @@ public class GroupPlan extends Plan {
 		source = s;
 		expList = list;
 		idExp = id;
-		s.setFather(this);
 		having = h;
 	}
 	@Override

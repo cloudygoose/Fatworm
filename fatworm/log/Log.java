@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import org.antlr.runtime.tree.CommonTree;
 import fatworm.expression.ExpList;
 import fatworm.expression.Expression;
 import fatworm.expression.FuncExp;
-import fatworm.logicplan.Plan;
+import fatworm.logicplan.*;
 import fatworm.scan.Scan;
 import fatworm.type.*;
 public class Log {
@@ -92,6 +93,34 @@ public class Log {
 	    //System.out.println(method.invoke(obj));
 	    return method.invoke(obj);
 	}
+	public static Object setterPlan(Object obj, String att, Object tar) {
+		Method method = null;
+		try {
+			method = obj.getClass().getMethod("set" + att, fatworm.logicplan.Plan.class);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    //System.out.println(method.invoke(obj));
+	    try {
+			return method.invoke(obj, tar);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+	    return null;
+	}
+	public static String toFirstUpper(String ss) {
+		String a = ss;
+    	String a1 = a.substring(0, 1).toUpperCase();
+    	a = a.substring(1, a.length());
+    	return a1 + a;
+	}
 	public static void getAllFunc(Object ob, LinkedList<FuncExp> list) throws Exception {
 		Field[] fields = ob.getClass().getDeclaredFields();
    		if (ob instanceof FuncExp) {
@@ -123,6 +152,9 @@ public class Log {
         	//Log.v(a1 + a);
         	if (child instanceof fatworm.driver.Connection) {
         		
+        	} else
+        	if (child instanceof SlotPlan) {
+        		//SlotPlan only contains some duplicate push-downed condition
         	} else
         	if (child instanceof Scan) {
         		Scan scan = (Scan)child;
