@@ -1,5 +1,6 @@
 package fatworm.opt;
 import java.lang.reflect.Field;
+import java.util.*;
 
 import fatworm.log.Log;
 import fatworm.logicplan.*;
@@ -29,4 +30,17 @@ public class AddSlotToPlan {
 			}
 		}
 	}
+	public static ArrayList<SlotPair> getAllReachSlots(Plan plan, ArrayList<SlotPair> res, int level) {
+		if (res == null)
+			res = new ArrayList<SlotPair>();
+		if (plan instanceof SlotPlan)
+			res.add(new SlotPair((SlotPlan)plan, level));
+		if (plan instanceof ProjectPlan || plan instanceof GroupPlan)
+			return res;
+		Iterator<Plan> iter = FatOptUtil.getImeSonPlans(plan).iterator();
+		while (iter.hasNext())
+			res = getAllReachSlots(iter.next(), res, level + 1);
+		return res;
+	}
 }
+

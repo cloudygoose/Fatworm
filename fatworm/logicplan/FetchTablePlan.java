@@ -4,6 +4,9 @@ import fatworm.driver.*;
 public class FetchTablePlan extends Plan {
 	private String tableName;
 	fatworm.table.Table table;
+	public fatworm.table.Table getTable() {
+		return table;
+	}
 	public String getTableName() {
 		return tableName;
 	}

@@ -75,6 +75,8 @@ public class FatOptUtil {
 	public static ArrayList<SelectPlan> getRecSelectPlans(Plan p, ArrayList<SelectPlan> res) {
 		if (res == null)
 			res = new ArrayList<SelectPlan>();
+		if (p instanceof SelectPlan)
+			res.add((SelectPlan)p);
 		Iterator<Plan> iter = getImeSonPlans(p).iterator();
 		while (iter.hasNext())
 			getRecSelectPlans(iter.next(), res);

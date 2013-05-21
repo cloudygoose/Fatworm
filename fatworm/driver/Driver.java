@@ -63,7 +63,7 @@ public class Driver implements java.sql.Driver{
 	 * cont- OPT is done on PLAN level, although it uses the generateTuple in the scanLevel
 	 * cont- OPT:Driver.addSlotPlan
 	 * cont- first, every tablePlan and product plan gets a SlotPlan as its father as long as it doesn't have s SelectPlan as its father
-	 * cont- the pushdown process stops at : projectplan,groupplan,OneTuplePlan,AliasPlan
+	 * cont- the pushdown process stops at : projectplan,groupplan,OneTuplePlan
 	 * cont- the pushdown add a SlotPlan above a ProjectPlan, a FetchTable, ProductPlan
 	 */
 	/*
@@ -106,7 +106,7 @@ public class Driver implements java.sql.Driver{
 	public static final int BUFFERSIZE = 500000;
 	public static final boolean logFile = false;
 	public static final boolean addSlotPlan = true;
-	public static final boolean logPlanTree = false;
+	public static final boolean logPlanTree = true;
 	public static final boolean logScanTree = false;
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {

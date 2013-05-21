@@ -1,5 +1,6 @@
 package fatworm.driver;
 
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
@@ -12,14 +13,15 @@ import org.antlr.runtime.tree.Tree;
 import fatworm.executor.*;
 import fatworm.log.DevelopException;
 import fatworm.log.Log;
-import fatworm.logicplan.Plan;
+import fatworm.logicplan.*;
 import fatworm.opt.AddSlotToPlan;
+import fatworm.opt.*;
 import fatworm.parser.FatwormParser;
 import fatworm.parser.ParserManager;
 import fatworm.planner.LogicPlanner;
 import fatworm.scan.Scan;
 import fatworm.table.Tuple;
-
+import java.util.*;
 public class Statement implements java.sql.Statement {
 	private fatworm.driver.Connection connection;
 	private Scan scan;
@@ -48,9 +50,20 @@ public class Statement implements java.sql.Statement {
 				if (Driver.logPlanTree)
 					Log.v("\n" + p.getPrint(0));
 				
+				
+				ArrayList<SelectPlan> slee = FatOptUtil.getRecSelectPlans(p, null);
+				for (int i = 0;i < slee.size();i++) {
+					SelectPlan se = slee.get(i);
+					Log.v("!!!!!!!!!!" + AddSlotToPlan.getAllReachSlots(se, null, 1).size());
+					Log.v("!@!@!@!@");
+					Log.v(AddSlotToPlan.getAllReachSlots(se, null, 1).get(0).getSlotPlan().getPrint(0));
+				}
+				
+				
 				scan = p.getScan();
 				if (Driver.logScanTree)
 					Log.v("\n" + scan.getPrint(0));
+				
 				/*
 				LinkedList<FuncExp> list = new LinkedList<FuncExp>();
 				Log.getAllFunc(scan, list);
