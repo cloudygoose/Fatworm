@@ -22,7 +22,7 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData{
 			return java.sql.Types.CHAR;
 		else 
 		if (f instanceof fatworm.type.FatDateTime)
-			return java.sql.Types.DATE;
+			return java.sql.Types.TIMESTAMP;
 		else 
 		if (f instanceof fatworm.type.FatDecimal)
 			return java.sql.Types.DECIMAL;

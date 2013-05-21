@@ -1,11 +1,14 @@
 package fatworm.type;
 import java.nio.ByteBuffer;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.io.*;
 import fatworm.log.*;
 public class FatTimeStamp extends FatType implements Serializable {
 	private static final long serialVersionUID = 17L;
-	Timestamp timeStamp;
+	java.sql.Timestamp timeStamp;
 	public FatTimeStamp() {
 	}
 	public FatTimeStamp(java.sql.Timestamp d) {
@@ -34,7 +37,14 @@ public class FatTimeStamp extends FatType implements Serializable {
 		FatTimeStamp fs = new FatTimeStamp();
 		if (bb.get() == 1)
 			fs.setNull();
-		fs.timeStamp = new Timestamp(bb.getLong());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Long kk = bb.getLong();
+		String ss = dateFormat.format(new Date(kk));
+		//Log.v(ss);
+			fs.timeStamp = new Timestamp(kk);
+			//Log.v("!!!" + fs.timeStamp.toString());
+			//fs.timeStamp = new Timestamp(dateFormat.parse(ss).getTime());
+			//Log.v(fs.timeStamp.toString());
 		return fs;
 	}
 	@Override
@@ -42,7 +52,7 @@ public class FatTimeStamp extends FatType implements Serializable {
 		if (f.isNull) 
 			return newNullInstance();
 		if (f instanceof FatTimeStamp) {
-			return (FatTimeStamp)f;
+			return new FatTimeStamp(((FatTimeStamp)f).timeStamp);
 		} else
 		throw new DevelopException();
 	}

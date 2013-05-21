@@ -1,20 +1,21 @@
 package fatworm.type;
 import java.nio.ByteBuffer;
-import java.sql.Date;
+
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.io.*;
 import fatworm.log.*;
 public class FatDateTime extends FatType implements Serializable {
 	private static final long serialVersionUID = 12L;
-	Date date;
-	public Date getDate() {
+	Timestamp date;
+	public Timestamp getDate() {
 		return date;
 	}
 	public FatDateTime() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	}
-	public FatDateTime(java.sql.Date d) {
+	public FatDateTime(java.sql.Timestamp d) {
 		date = d;
 	}
 	@Override
@@ -40,7 +41,7 @@ public class FatDateTime extends FatType implements Serializable {
 		FatDateTime fd = new FatDateTime();
 		if (bb.get() == 1)
 			fd.isNull = true;
-		fd.date = new Date(bb.getLong());
+		fd.date = new Timestamp(bb.getLong());
 		return fd;
 	}
 	@Override
@@ -52,7 +53,7 @@ public class FatDateTime extends FatType implements Serializable {
 			try {
 			String s = ((FatChar)f).s;
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			fd.date = new Date(dateFormat.parse(s).getTime()); 
+			fd.date = new Timestamp(dateFormat.parse(s).getTime()); 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -70,7 +71,7 @@ public class FatDateTime extends FatType implements Serializable {
 	@Override
 	public FatDateTime newZeroInstance() {
 		FatDateTime f = new FatDateTime();
-		f.date = new Date(0);
+		f.date = new Timestamp(0);
 		return f;
 	}
 	@Override

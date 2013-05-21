@@ -28,6 +28,7 @@ public class ResultSet implements java.sql.ResultSet {
 	Scan scan;
 	Tuple nextT;
 	Tuple ex;
+	boolean hasOpened;
 	public ResultSetMetaData getMetaData() {
 		try {
 			return new fatworm.driver.ResultSetMetaData(ex);
@@ -79,12 +80,20 @@ public class ResultSet implements java.sql.ResultSet {
 				return;
 			}
 			ex = s.generateExTuple();
-			s.open();
+			hasOpened = false;
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	public boolean next() {
+		if (!hasOpened && scan != null) {
+			hasOpened = true;
+			try {
+				scan.open();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		if (scan == null)
 			return false;
 		try {
@@ -100,8 +109,10 @@ public class ResultSet implements java.sql.ResultSet {
 	}
 	@Override
 	public void close() throws SQLException {
-		if (scan != null)
+		if (scan != null) {
+			hasOpened = false;
 			scan.close();
+		}
 	}
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {

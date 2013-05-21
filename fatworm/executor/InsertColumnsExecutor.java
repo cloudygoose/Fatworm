@@ -73,7 +73,7 @@ public class InsertColumnsExecutor extends Executor {
 					if (c.getType() instanceof FatDateTime) {
 						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 						String s = dateFormat.format(new java.util.Date()).toString();
-						Date date = new Date(dateFormat.parse(s).getTime()); 
+						java.sql.Timestamp date = new java.sql.Timestamp(dateFormat.parse(s).getTime()); 
 						v = new FatDateTime(date);
 					} else
 					if (c.getType() instanceof FatTimeStamp) {

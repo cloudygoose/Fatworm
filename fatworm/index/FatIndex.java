@@ -112,6 +112,7 @@ public class FatIndex implements Serializable {
 		}
 	}
 	public void close() {
+		connection.bufferManager.dumpAll(fileName);
 		try {
 			file.close();
 		} catch (IOException e) {
@@ -120,8 +121,15 @@ public class FatIndex implements Serializable {
 	}
 	//set to be only called by fatworm.table.drop
 	public void drop() {
+		connection.bufferManager.dumpAll(fileName);
+		try {
+			file.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		File f = new File(fileName);
 		f.delete();
+		//Log.v("!!!indexDelete" + fileName);
 	}
 	private BPlusNode getRoot() {
 		return BPlusNode.getInstanceFromFatBlock(rootBlock, keyType, this, 1, true, true);

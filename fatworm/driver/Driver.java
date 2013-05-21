@@ -63,13 +63,14 @@ public class Driver implements java.sql.Driver{
 	 * Driver.logFile boolean indicates whether Log to file
 	 * I don't drop index because I didn't save the name of the index, 
 	 * cont- I drop them when I drop tables
-	 * I didn't know how many ' 's I added to a CHAR value, when selected, I delete all of them. 
+	 * I didn't know how many ' 's I added to a CHAR value, when selected, I delete all of them.
+	 * cont - This is done in ResultSet 
 	 */
 	static {
 		try {
 			Driver d = new Driver();
 			java.sql.DriverManager.registerDriver(d);
-			/*
+			
 			try {
 				d.test();
 			} catch (IOException e) {
@@ -79,7 +80,7 @@ public class Driver implements java.sql.Driver{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			*/
+			
 		} catch (SQLException e) {
 			throw new RuntimeException("Can't register driver!");
 		}
@@ -123,7 +124,7 @@ public class Driver implements java.sql.Driver{
 		String str9 = "select distinct customer_name from borrower, loan where (branch_name, customer_name) in (select branch_name, customer_name "  
 				+ "from depositor, account where depositor.account_number = account.account_number)";
 		
-		fatworm.driver.Connection connection = connect("", null);
+		fatworm.driver.Connection connection = connect("jdbc:fatworm:/E:\\workspace\\Fatworm\\files", null);
 		Log.v("!!test begin!!");
 		Statement stmt = connection.createStatement();
 		stmt.execute("create database test");
