@@ -43,6 +43,11 @@ public class Tuple {
 		}
 		return t;
 	}
+	public void aliasTo(String s) {
+		for (int i = 0;i < tupleColumns.size();i++) {
+			tupleColumns.get(i).setTableName(s);
+		}
+	}
 	/*
 	public FatType findById(IdExpression id) {
 		for (int i = 0;i < tupleColumns.size();i++)

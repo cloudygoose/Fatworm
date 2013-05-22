@@ -84,6 +84,14 @@ public class Statement implements java.sql.Statement {
 					Log.v("logPlanAfterPush");
 					Log.v(p.getPrint(0));
 				}
+				
+				if (Driver.patternOne) {
+					ArrayList<SlotPlan> slots = FatOptUtil.getRecSlotPlans(p, null);
+					for (int i = 0;i < slots.size();i++) {
+						Patterns.isPatternOne(slots.get(i));
+					}
+				}
+				
 				scan = p.getScan();
 				if (Driver.logScanTree)
 					Log.v("\n" + scan.getPrint(0));

@@ -84,4 +84,14 @@ public class FatOptUtil {
 			getRecSelectPlans(iter.next(), res);
 		return res;
 	}
+	public static ArrayList<SlotPlan> getRecSlotPlans(Plan p, ArrayList<SlotPlan> res) {
+		if (res == null)
+			res = new ArrayList<SlotPlan>();
+		if (p instanceof SlotPlan)
+			res.add((SlotPlan)p);
+		Iterator<Plan> iter = getImeSonPlans(p).iterator();
+		while (iter.hasNext())
+			getRecSlotPlans(iter.next(), res);
+		return res;
+	}
 }

@@ -1,0 +1,67 @@
+package fatworm.opt;
+import fatworm.log.*;
+import fatworm.logicplan.*;
+import fatworm.expression.*;
+
+public class Patterns {
+	/* PatternOne
+	 * SlotPlan(
+                SOURCE FROM
+                ProductPlan(
+         ap1        AliasPlan(->MODEL1      a1
+                        SlotPlan(
+                            SOURCE FROM
+                            FetchTablePlan(MODEL)    t1
+                            CONDITION ON
+                            BNFNULL
+                        )SlotPlan
+                    )
+          ap2       AliasPlan(->T1008290346560        a2
+                        SlotPlan(
+                            SOURCE FROM
+                            FetchTablePlan(ATOM)      t2
+                            CONDITION ON
+                            BNFNULL
+                        )SlotPlan
+                    )
+                )Product
+                CONDITION ON
+                BNFListExp(
+                    EqualExp(
+                        ID:MODEL1.MODEL_ID                    a1             c1  
+                        ID:T1008290346560.MODEL_ID            a2             c2(index)
+                    )Equal
+                )BNFListExp
+            )SlotPlan
+	 */
+	public static boolean isPatternOne(SlotPlan slot) {
+		try {
+			String a1, c1, a2, c2, t1, t2;
+			BNFList bnf = slot.getBnf();
+			if (bnf.size() != 1)
+				throw new PatternException();
+			EqualExp equal = (EqualExp)bnf.get(0);
+			a1 = ((IdExpression)equal.getLeft()).getTableName();
+			c1 = ((IdExpression)equal.getLeft()).getColumnName();
+			a2 = ((IdExpression)equal.getRight()).getTableName();
+			c2 = ((IdExpression)equal.getLeft()).getColumnName();
+			ProductPlan product = (ProductPlan)slot.getSource();
+			AliasPlan ap1 = (AliasPlan)product.getSa();
+			AliasPlan ap2 = (AliasPlan)product.getSb();
+			if (!ap1.getAlias().equals(a1))
+				throw new PatternException();
+			if (!ap2.getAlias().equals(a2))
+				throw new PatternException();
+			t1 = ((FetchTablePlan)(((SlotPlan)(ap1.getSource())).getSource())).getTableName();
+			t2 = ((FetchTablePlan)(((SlotPlan)(ap2.getSource())).getSource())).getTableName();
+			//Log.v(a1 + " " + t1 + " " + c1);
+			//Log.v(a2 + " " + t2 + " " + c2);
+			slot.setSource(new PatternOnePlan(a1, t1, c1, a2, t2, c2, slot.getConnection()));
+			if (!slot.getConnection().getDatabaseMgr().currentTableMgr.getTable(t2).hasIndexOn(c2))
+				throw new PatternException();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+}

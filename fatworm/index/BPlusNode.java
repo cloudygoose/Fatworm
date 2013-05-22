@@ -130,7 +130,7 @@ public class BPlusNode {
 		int in = 0;
 		//the split-insert must be inserted at a specified position
 		if (insertA.getBeforeBlock() != null) {
-			while (in < pairs.size() && pairs.get(in).getFileOffset() != insertA.getBeforeBlock())
+			while (in < pairs.size() && !pairs.get(in).getFileOffset().equals(insertA.getBeforeBlock()))
 				++in;
 			++in;
 		} else {

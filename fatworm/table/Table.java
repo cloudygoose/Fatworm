@@ -112,6 +112,14 @@ public class Table implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	public boolean hasIndexOn(String colName) {
+		if (indexs.get(colName.toUpperCase()) == null)
+			return false;
+		return true;
+	}
+	public FatIndex getIndex(String colName) {
+		return indexs.get(colName.toUpperCase());
+	}
 	public FatIndex createIndex(String indexName, String colName) {
 		int k;
 		for (k = 0;k < schema.getColumnNumber();k++) 

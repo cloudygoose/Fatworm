@@ -70,6 +70,7 @@ public class Driver implements java.sql.Driver{
 	 */
 	/*
 	 * implementation notes:
+	 * index : UPPER table : DOWN
 	 * The tupleNum in the table is added by the insertExecutors, not by table itself
 	 * When I delete a tuple, the only thing I do is to set the null byte to 1
 	 * The getTupleFromByteArray(byte[]) method in Tuple and in Schema are very similiar
@@ -114,6 +115,7 @@ public class Driver implements java.sql.Driver{
 	public static final boolean logPlanTree = false;
 	public static final boolean logScanTree = false;
 	public static final boolean logPlanAfterPush = false;
+	public static final boolean patternOne = true;
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
 		// TODO Auto-generated method stub
