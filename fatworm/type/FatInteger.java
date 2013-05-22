@@ -150,9 +150,13 @@ public class FatInteger extends FatType implements Serializable {
 	public int compareTo(Object o) {
 		int b;
 		if (o instanceof FatInteger || o instanceof FatFloat || o instanceof FatDecimal) 
-			b = getBigDecimal().compareTo(((FatType)o).getBigDecimal());
+			b = this.getBigDecimal().compareTo(((FatType)o).getBigDecimal());
 		else
-			throw new DevelopException();
+		if (o instanceof FatChar) {
+			Integer oI = new Integer(((FatChar)o).getString());
+			return (this.number.compareTo(oI));
+		}			
+		else throw new DevelopException();
 		return b;
 	}
 }

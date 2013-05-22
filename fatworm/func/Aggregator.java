@@ -25,7 +25,7 @@ public class Aggregator {
 			max = factory.newMaxInstance();
 		} else
 		if (t.equals("SUM")) {
-			sum = factory.newZeroInstance();
+			sum = new FatFloat();
 		}
 	}
 	public void accept(FatType f) {

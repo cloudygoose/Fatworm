@@ -24,6 +24,8 @@ public class FatVarChar extends FatType implements Serializable {
 			bb.put((byte)1);
 		else
 			bb.put((byte)0);
+		if (s == null)
+			s = "";
 		bb.putInt(s.length());
 		bb.put(s.getBytes());
 		if (length - s.length() > 0) {

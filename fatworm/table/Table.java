@@ -114,19 +114,42 @@ public class Table implements Serializable {
 	}
 	public FatIndex createIndex(String indexName, String colName) {
 		int k;
-		for (k = 0;k < schema.getColumnNumber();k++)
-			if (schema.getColumn(k).getName().equals(colName))
-				break;
-		FatIndex index = new FatIndex(indexName, this, colName, schema.getColumn(k).getType(), connection);
-		if (indexs.get(colName) != null)
-			return indexs.get(colName);
-		indexs.put(colName, index);
-		return index;
+		for (k = 0;k < schema.getColumnNumber();k++) 
+			if (Log.stringNameEqual(schema.getColumn(k).getName(), colName)) {
+				FatIndex index = new FatIndex(indexName, this, colName, schema.getColumn(k).getType(), connection);
+				if (indexs.get(colName.toUpperCase()) != null)
+					return indexs.get(colName.toUpperCase());
+				indexs.put(colName.toUpperCase(), index);
+				return index;
+			}
+		throw new DevelopException();
 	}
 	public TableCursorPageId getStartTableCursorPageId() {
 		return new TableCursorPageId(fileName, 0, this);
 	}
 	public TableCursor getTableCursor() {
 		return new RealTableCursor(name, records, schema, this);
+	}
+	public void indexDealInsertTuple(int pos, Tuple t) {
+		for (int i = 0;i < t.size();i++) {
+			FatIndex index = indexs.get(t.get(i).columnName.toUpperCase());
+			if (t.get(i).getValue().isNull())
+				continue;
+			if (index == null)
+				continue;
+			FatType key = t.get(i).getValue();
+			index.insertPair(key, pos);
+		}
+	}
+	public void indexDealDeleteTuple(int pos, Tuple t) {
+		for (int i = 0;i < t.size();i++) {
+			FatIndex index = indexs.get(t.get(i).columnName.toUpperCase());
+			if (t.get(i).getValue().isNull())
+				continue;
+			if (index == null)
+				continue;
+			FatType key = t.get(i).getValue();
+			index.deletePair(key, pos);
+		}
 	}
 }

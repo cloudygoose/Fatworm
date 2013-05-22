@@ -26,8 +26,9 @@ public class InsertColumnsExecutor extends Executor {
 	}
 	public void execute() throws Exception {
 		String tableName = tree.getChild(0).getText();
-		TableCursor table = statement.getConnection().getDatabaseMgr()
-				.currentTableMgr.getTable(tableName).getTableCursor();
+		Table ta = statement.getConnection().getDatabaseMgr()
+				.currentTableMgr.getTable(tableName);
+		TableCursor table = ta.getTableCursor();
 		
 		table.open();
 		
@@ -95,6 +96,7 @@ public class InsertColumnsExecutor extends Executor {
 					c.getType().newInstance(v)));
 		}
 		table.insert(tuple);
+		ta.indexDealInsertTuple(table.getLastPos(), tuple); 
 		table.addTupleNumber(1);
 /*
 		Log.v("original tuple : " + tuple.getPrint());

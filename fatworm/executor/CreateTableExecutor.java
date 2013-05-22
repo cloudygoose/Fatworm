@@ -30,6 +30,10 @@ public class CreateTableExecutor extends Executor {
 		for (int i = 1;i < tree.getChildCount();i++) {
 			if (isCreateDefinition(tree.getChild(i))) {
 				newTable.addColumn(createColumn((CommonTree)(tree.getChild(i))));
+			} else 
+			if (isPrimaryKey(tree.getChild(i))) {
+				String indexCol = tree.getChild(i).getChild(0).getText();
+				newTable.createIndex(indexCol, indexCol.toUpperCase());
 			} 
 		}
 	}

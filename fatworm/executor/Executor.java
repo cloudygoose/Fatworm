@@ -151,6 +151,13 @@ public class Executor {
 			return true;
 		return false;		
 	}
+	public boolean isPrimaryKey(Tree t) {
+		CommonTree tr = (CommonTree)t;
+		String s = FatwormParser.tokenNames[tr.getType()];
+		if (s.equals("PRIMARY_KEY"))
+			return true;
+		return false;		
+	}
 	public void execute() throws Exception{
 		throw new DevelopException();
 	}

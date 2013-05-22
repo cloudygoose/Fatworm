@@ -2,6 +2,7 @@ package fatworm.executor;
 
 import org.antlr.runtime.tree.CommonTree;
 
+import fatworm.driver.Driver;
 import fatworm.driver.Statement;
 import fatworm.logicplan.Plan;
 import fatworm.scan.Scan;
@@ -20,8 +21,9 @@ public class UpdateExecutor extends Executor {
 	}
 	public void execute() throws Exception {
 		String tableName = tree.getChild(0).getText();
-		TableCursor table = statement.getConnection().getDatabaseMgr()
-				.currentTableMgr.getTable(tableName).getTableCursor();
+		Table ta = statement.getConnection().getDatabaseMgr()
+				.currentTableMgr.getTable(tableName);
+		TableCursor table = ta.getTableCursor();
 		tree.deleteChild(0);
 		LogicPlanner planner = statement.getConnection().logicPlanner;
 		ArrayList<UpdatePair> pairs = new ArrayList<UpdatePair>();
@@ -37,6 +39,8 @@ public class UpdateExecutor extends Executor {
 		table.open();
 		while (table.next()) {
 			Tuple t = table.getTuple();
+			int pos = table.getLastPos();
+			Tuple old = ta.getSchema().newTupleFromTuple(t);
 			//statement.getConnection().tupleStack.push(t.copy()); I found that update does not use old values.
 			statement.getConnection().tupleStack.push(t);
 			boolean cc = true;
@@ -47,6 +51,8 @@ public class UpdateExecutor extends Executor {
 					t.set(pairs.get(i).getId(), pairs.get(i).getValue().evaluate());
 				}
 				table.update(t);
+				ta.indexDealDeleteTuple(pos, old);
+				ta.indexDealInsertTuple(pos, t);
 			}
 			statement.getConnection().tupleStack.pop();
 		}

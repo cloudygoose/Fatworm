@@ -36,11 +36,11 @@ public class FatDecimal extends FatType implements Serializable {
 	}
 	@Override
 	public FatDecimal newMinInstance() {
-		return new FatDecimal(new BigDecimal(-100000000));
+		return new FatDecimal(new BigDecimal(100000000));
 	}
 	@Override
 	public FatDecimal newMaxInstance() {
-		return new FatDecimal(new BigDecimal(100000000));
+		return new FatDecimal(new BigDecimal(-100000000));
 	}
 	@Override
 	public FatDecimal newInstance(FatType num) throws DevelopException {
@@ -141,7 +141,7 @@ public class FatDecimal extends FatType implements Serializable {
 	public FatType computeDiv(FatType t) {
 		if (t instanceof FatDecimal) {
 			FatDecimal d = (FatDecimal)t;
-			return newInstance(number.divide(d.getNumber(), RoundingMode.HALF_EVEN));
+			return newInstance(number.divide(d.getNumber(), 4, RoundingMode.HALF_EVEN));
 		} else
 		throw new DevelopException();
 	}

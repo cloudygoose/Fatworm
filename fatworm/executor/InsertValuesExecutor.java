@@ -15,8 +15,9 @@ public class InsertValuesExecutor extends Executor {
 	}
 	public void execute() throws Exception {
 		String tableName = tree.getChild(0).getText();
-		TableCursor table = statement.getConnection().getDatabaseMgr()
-				.currentTableMgr.getTable(tableName).getTableCursor();
+		Table ta = statement.getConnection().getDatabaseMgr()
+				.currentTableMgr.getTable(tableName);
+		TableCursor table = ta.getTableCursor();
 		
 		table.open();
 		
@@ -33,6 +34,8 @@ public class InsertValuesExecutor extends Executor {
 						v = c.getAutoValueAfterInc();
 					}
 				}
+				if (isNull(value))
+					v = c.getType().newNullInstance();
 			} else
 			{
 				Expression exp = statement.getConnection().logicPlanner.
@@ -45,6 +48,7 @@ public class InsertValuesExecutor extends Executor {
 		}
 		
 		table.insert(tuple);
+		ta.indexDealInsertTuple(table.getLastPos(), tuple);
 		table.addTupleNumber(1);
 		//table.next();
 		//Log.v(table.getTuple().getPrint());

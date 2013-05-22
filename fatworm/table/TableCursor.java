@@ -5,6 +5,7 @@ import java.util.*;
 import fatworm.expression.IdExpression;
 import fatworm.log.DevelopException;
 import fatworm.log.Log;
+import fatworm.storage.TableCursorPageId;
 import fatworm.type.FatType;
 public class TableCursor {
 	String name;
@@ -53,6 +54,9 @@ public class TableCursor {
 				return;
 			}
 	}*/
+	public int getLastPos() {
+		throw new DevelopException();
+	}
 	public void update(Tuple t) {
 		records.set(iter, t);
 	}
@@ -71,9 +75,11 @@ public class TableCursor {
 		iter--;
 		tmpSize--;
 	}
-	public void insert(Tuple t) {
+	public int insert(Tuple t) {
+		int kk = records.size();
 		records.add(t);
 		//table.addTuple(); now handled by executors
+		return kk;
 	}
 	public void beforeFirst() {
 		iter = -1;

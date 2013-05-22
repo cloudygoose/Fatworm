@@ -20,6 +20,8 @@ public class LessEqualExp extends Expression {
 	}
 	@Override
 	public FatType evaluate() throws Exception {
+		if (left.evaluate().isNull() || right.evaluate().isNull())
+			return new FatBoolean(false);
 		int b = left.evaluate().compareTo(right.evaluate());
 		if (b <= 0)
 			return new FatBoolean(true);

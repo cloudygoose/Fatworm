@@ -62,7 +62,8 @@ public class Driver implements java.sql.Driver{
 	 * OPT
 	 * cont- OPT is done on PLAN level, although it uses the generateTuple in the scanLevel
 	 * cont1- OPT:try left product tree or right product tree in Statement.java
-	 * cont2- OPT:Driver.addSlotPlan
+	 * cont2- every primary key has an index
+	 * cont3- OPT:Driver.addSlotPlan
 	 * cont- first, every tablePlan and product plan gets a SlotPlan as its father as long as it doesn't have s SelectPlan as its father
 	 * cont- the pushdown process stops at : projectplan,groupplan,OneTuplePlan
 	 * cont- the pushdown add a SlotPlan above a ProjectPlan, a FetchTable, ProductPlan
@@ -103,7 +104,7 @@ public class Driver implements java.sql.Driver{
 			throw new RuntimeException("Can't register driver!");
 		}
 	}
-	public static final int BLOCKLENGTH = 4096;
+	public static final int BLOCKLENGTH = 50;
 	public static final int BUFFERSIZE = 500000;
 	public static final boolean logFile = false;
 	
@@ -112,6 +113,7 @@ public class Driver implements java.sql.Driver{
 	
 	public static final boolean logPlanTree = false;
 	public static final boolean logScanTree = false;
+	public static final boolean logPlanAfterPush = false;
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
 		// TODO Auto-generated method stub
@@ -147,7 +149,7 @@ public class Driver implements java.sql.Driver{
 		String str9 = "select distinct customer_name from borrower, loan where (branch_name, customer_name) in (select branch_name, customer_name "  
 				+ "from depositor, account where depositor.account_number = account.account_number)";
 		
-		fatworm.driver.Connection connection = connect("jdbc:fatworm:/E:\\workspace\\Fatworm\\files", null);
+		fatworm.driver.Connection connection = connect("jdbc:fatworm://home/slhome/txh18/workspace/Fatworm/files", null);
 		Log.v("!!test begin!!");
 		Statement stmt = connection.createStatement();
 		stmt.execute("create database test");
@@ -156,7 +158,19 @@ public class Driver implements java.sql.Driver{
 				"b varchar(3) default 'aaa', primary key(a))");
 		stmt.execute("create table test2(aa int not null auto_increment, " + 
 				"b varchar(3) default 'aaa')");
-		//FatIndex testIndex = connection.dbMgr.dbs.get("test").getTable("test").createIndex("index1", "a");
+		FatIndex testIndex = connection.dbMgr.dbs.get("test").getTable("test").createIndex("index1", "a");
+		/*
+		for (int i = 0;i < 20;i++) {
+			testIndex.insertPair(new FatInteger(i), i);
+			testIndex.insertPair(new FatInteger(i), i + 10);
+			testIndex.insertPair(new FatInteger(i), i + 20);
+			testIndex.insertPair(new FatInteger(i), i + 30);
+		}
+		BPlusCursor cursor = new BPlusCursor(testIndex);
+		cursor.setFirstBiggerThan(new FatInteger(2));
+		while (cursor.next())
+			Log.v(cursor.getT().getPrint());
+		*/
 		stmt.execute("create index fyc on test(a)");
 		stmt.execute("insert into test values (1, 'aa')");
 		stmt.execute("insert into test values (3, 'aa')");

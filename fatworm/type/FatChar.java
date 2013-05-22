@@ -27,19 +27,26 @@ public class FatChar extends FatType implements Serializable {
 	}
 	@Override
 	public int getByteArrayLength() {
+		//Log.v("length : " + length);
 		return length + 1;
 	}
 	@Override
 	public FatChar newNullInstance() {
 		FatChar b = new FatChar();
+		b.s = "";
 		b.isNull = true;
+		b.length = this.length;
 		return b;
 	}
 
 	@Override
 	public void storeIntoByteBuffer(ByteBuffer bb) {
-		if (isNull)
+		if (isNull) {
 			bb.put((byte)1);
+			byte[] b = new byte[length];
+			bb.put(b);
+			return;
+		}
 		else
 			bb.put((byte)0);
 		try {
@@ -127,9 +134,9 @@ public class FatChar extends FatType implements Serializable {
 	@Override
 	public int compareTo(Object o) {
 		if (o instanceof FatChar)
-			return s.toLowerCase().compareTo(((FatChar)o).s.toLowerCase());
+			return Log.stripStringTail(s.toLowerCase()).compareTo(Log.stripStringTail(((FatChar)o).s.toLowerCase()));
 		if (o instanceof FatVarChar)
-			return s.toLowerCase().compareTo(((FatVarChar)o).s.toLowerCase());
+			return Log.stripStringTail(s.toLowerCase()).compareTo(Log.stripStringTail(((FatVarChar)o).s.toLowerCase()));
 		throw new DevelopException();
 	}
 }

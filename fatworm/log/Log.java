@@ -51,6 +51,12 @@ public class Log {
 				System.out.println("log : " + str);
 		}
 	}
+	public static String stripStringTail(String s) {
+		int len = s.length();
+		while (len > 0 && s.charAt(len - 1) == ' ')
+			len--;
+		return s.substring(0, len);
+	}
 	public static void v(int k) {
 		if (open)
 			System.out.println("log : " + k);

@@ -18,8 +18,9 @@ public class InsertQueryExecutor extends Executor {
 	}
 	public void execute() throws Exception {
 		String tableName = tree.getChild(0).getText();
-		TableCursor table = statement.getConnection().getDatabaseMgr()
-				.currentTableMgr.getTable(tableName).getTableCursor();
+		Table ta = statement.getConnection().getDatabaseMgr()
+				.currentTableMgr.getTable(tableName);
+		TableCursor table = ta.getTableCursor();
 		Plan plan = statement.getConnection().logicPlanner.translate(tree.getChild(1));
 		Scan scan = plan.getScan();
 		scan.open();
@@ -27,7 +28,9 @@ public class InsertQueryExecutor extends Executor {
 		int added = 0;
 		while (scan.next()) {
 			Tuple old = scan.getTuple();
-			table.insert(table.getSchema().newTupleFromTuple(old));
+			Tuple ne = table.getSchema().newTupleFromTuple(old);
+			table.insert(ne);
+			ta.indexDealInsertTuple(table.getLastPos(), ne);
 			added++;
 		}
 		table.addTupleNumber(added);

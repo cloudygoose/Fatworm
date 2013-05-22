@@ -11,6 +11,7 @@ public class FatFloat extends FatType implements Serializable {
 	private BigDecimal number;
 	public FatFloat() {
 		super();
+		number = new BigDecimal(0);
 	}
 	public FatFloat(BigDecimal num) {
 		super();
@@ -64,6 +65,11 @@ public class FatFloat extends FatType implements Serializable {
 			ff.number = ((FatFloat)s).getNumber();
 			return ff; 
 		} else
+		if (s instanceof FatInteger) {
+			FatFloat ff = new FatFloat();
+			ff.number = ((FatInteger)s).getBigDecimal();
+			return ff;
+		} else
 		throw new DevelopException();
 	}
 	@Override
@@ -81,6 +87,10 @@ public class FatFloat extends FatType implements Serializable {
 		if (t instanceof FatFloat) {
 			FatFloat d = (FatFloat)t;
 			return newInstance(number.add(d.getNumber()));
+		} else
+		if (t instanceof FatInteger) {
+			FatInteger d = (FatInteger)t;
+			return newInstance(number.add(d.getBigDecimal()));
 		} else
 		throw new DevelopException();
 	}
@@ -104,11 +114,11 @@ public class FatFloat extends FatType implements Serializable {
 	public FatType computeDiv(FatType t) {
 		if (t instanceof FatFloat) {
 			FatFloat d = (FatFloat)t;
-			return newInstance(number.divide(d.getNumber(), RoundingMode.HALF_EVEN));
+			return newInstance(number.divide(d.getNumber(), 4, RoundingMode.HALF_EVEN));
 		} else
 		if (t instanceof FatInteger) {
 			FatInteger d = (FatInteger)t;
-			return newInstance(number.divide(d.getBigDecimal(), RoundingMode.HALF_EVEN));
+			return newInstance(number.divide(d.getBigDecimal(), 4, RoundingMode.HALF_EVEN));
 		}
 		throw new DevelopException();
 	}
@@ -118,11 +128,11 @@ public class FatFloat extends FatType implements Serializable {
 	}
 	@Override
 	public FatFloat newMinInstance() {
-		return new FatFloat(new BigDecimal(-100000000));
+		return new FatFloat(new BigDecimal(100000000));
 	}
 	@Override
 	public FatFloat newMaxInstance() {
-		return new FatFloat(new BigDecimal(100000000));
+		return new FatFloat(new BigDecimal(-100000000));
 	}
 	@Override
 	public String getPrint(int old) {

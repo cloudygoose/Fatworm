@@ -80,6 +80,16 @@ public class FatTimeStamp extends FatType implements Serializable {
 		if (t instanceof FatTimeStamp) {
 			return timeStamp.compareTo(((FatTimeStamp)t).getTimeStamp());
 		} else
+		if (t instanceof FatChar) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Timestamp oD = null;
+			try {
+				oD = new Timestamp(dateFormat.parse(((FatChar)t).getString()).getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			return timeStamp.compareTo(oD);
+		} else
 		throw new DevelopException();
 	}
 }

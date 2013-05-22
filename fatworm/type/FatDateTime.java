@@ -91,7 +91,17 @@ public class FatDateTime extends FatType implements Serializable {
 	public int compareTo(Object o) {
 		if (o instanceof FatDateTime) {
 			return date.compareTo(((FatDateTime)o).date);
-		}
+		} else
+		if (o instanceof FatChar) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Timestamp oD = null;
+			try {
+				oD = new Timestamp(dateFormat.parse(((FatChar)o).getString()).getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			return date.compareTo(oD);
+		} else
 		throw new DevelopException();
 	}
 }

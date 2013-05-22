@@ -35,6 +35,9 @@ public class Statement implements java.sql.Statement {
 		return connection;
 	}
 	public boolean execute(String sql) {
+//		if (sql.charAt(sql.length() - 1) == ';')
+//			sql = sql.substring(0, sql.length() - 1);
+//		Log.v(sql);
 		ParserManager parserManager = connection.parserManager;
 		LogicPlanner logicPlanner = connection.logicPlanner;
 		CommonTree t = parserManager.getCommonTree(sql); // get tree from parser
@@ -54,8 +57,10 @@ public class Statement implements java.sql.Statement {
 					AddSlotToPlan.addSlotToPlan(p2);
 					AddSlotToPlan.addSlotToPlan(p1);
 				}
-				if (Driver.logPlanTree)
+				if (Driver.logPlanTree) {
+					Log.v("logPlanTreeBeforePush");
 					Log.v("\n" + p2.getPrint(0));
+				}
 				int sum1 = 0, sum2 = 0;
 				if (Driver.pushDownSelect) {				
 					ArrayList<SelectPlan> slee = FatOptUtil.getRecSelectPlans(p2, null);
@@ -75,7 +80,10 @@ public class Statement implements java.sql.Statement {
 				p = p2;
 				if (Driver.pushDownSelect && sum1 > sum2 + 50)
 					p = p1;
-				
+				if (Driver.logPlanAfterPush) {
+					Log.v("logPlanAfterPush");
+					Log.v(p.getPrint(0));
+				}
 				scan = p.getScan();
 				if (Driver.logScanTree)
 					Log.v("\n" + scan.getPrint(0));

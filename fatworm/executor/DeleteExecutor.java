@@ -19,8 +19,9 @@ public class DeleteExecutor extends Executor {
 	}
 	public void execute() throws Exception {
 		String tableName = tree.getChild(0).getText();
-		TableCursor table = statement.getConnection().getDatabaseMgr()
-				.currentTableMgr.getTable(tableName).getTableCursor();
+		Table ta = statement.getConnection().getDatabaseMgr()
+				.currentTableMgr.getTable(tableName);
+		TableCursor table = ta.getTableCursor();
 		Expression condition = null;
 		if (tree.getChildCount() > 1)
 			condition = statement.getConnection().logicPlanner.translateExpression(
@@ -34,8 +35,10 @@ public class DeleteExecutor extends Executor {
 				f = condition.evaluate();
 			else
 				f = new FatBoolean(true);
-			if (Log.checkFatBoolean(f))
+			if (Log.checkFatBoolean(f)) {
 				table.delete();
+				ta.indexDealDeleteTuple(table.getLastPos(), t);
+			}
 			statement.getConnection().tupleStack.pop();
 		}
 		table.close();
