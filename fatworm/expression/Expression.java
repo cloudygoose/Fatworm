@@ -13,6 +13,9 @@ public class Expression {
 	public void setConnection(fatworm.driver.Connection c) {
 		connection = c;
 	}
+	public fatworm.driver.Connection getConnection() {
+		return connection;
+	}
 	public String getPrint(int old) throws Exception{
 		throw new DevelopException();
 //		return  padding(old) + "a expression\n";
@@ -25,6 +28,9 @@ public class Expression {
 			return ((AsExp)this).getName();
 		}
 		return "";
+	}
+	public Expression copy() {
+		throw new DevelopException();
 	}
 	public String padding(int kk) {
 		String result = "";

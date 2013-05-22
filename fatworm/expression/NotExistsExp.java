@@ -10,6 +10,11 @@ public class NotExistsExp extends Expression {
 	public NotExistsExp(Plan s) {
 		source = s;
 	}
+	public NotExistsExp copy() {
+		NotExistsExp exp = new NotExistsExp(source);
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override 
 	public FatType evaluate() throws Exception {
 		Scan scan = source.getScan();

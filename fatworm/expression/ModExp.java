@@ -11,6 +11,11 @@ public class ModExp extends Expression {
 	public ModExp(Expression s1, Expression s2) {
 		left = s1; right = s2;
 	}
+	public ModExp copy() {
+		ModExp exp = new ModExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		return left.evaluate().computeMod(right.evaluate());

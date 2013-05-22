@@ -10,6 +10,11 @@ public class FloatLiteral extends Expression{
 	public FloatLiteral(BigDecimal num) {
 		number = num;
 	}
+	public FloatLiteral copy() {
+		FloatLiteral exp = new FloatLiteral(number);
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public String getPrint(int old) {
 		return padding(old) + number + "\n";

@@ -26,6 +26,11 @@ public class AllExp extends Expression {
 		cop = op;
 		source = s;
 	}
+	public AllExp copy() {
+		AllExp exp = new AllExp(value.copy(), cop, source);
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		FatType fo = value.evaluate();

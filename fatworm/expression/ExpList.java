@@ -1,6 +1,7 @@
 package fatworm.expression;
 import java.lang.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import fatworm.log.*;
 import fatworm.type.*;
@@ -12,6 +13,13 @@ public class ExpList {
 	}
 	public ExpList(ArrayList<Expression> list) {
 		expList = list;
+	}
+	public ExpList copy() {
+		ArrayList<Expression> kk = new ArrayList<Expression>();
+		Iterator<Expression> iter = expList.iterator();
+		while (iter.hasNext()) 
+			kk.add(iter.next().copy());
+		return new ExpList(kk);
 	}
 	public String getPrint(int old) throws Exception{
 		String result = padding(old) + "ExpList:(\n";

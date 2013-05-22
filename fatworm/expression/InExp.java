@@ -16,6 +16,11 @@ public class InExp extends Expression {
 		source = s;
 		expList = list;
 	}
+	public InExp copy() {
+		InExp exp = new InExp(expList.copy(), source);
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		Tuple tuple = expList.evaluate();

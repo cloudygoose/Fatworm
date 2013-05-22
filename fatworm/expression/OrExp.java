@@ -11,6 +11,11 @@ public class OrExp extends Expression {
 	public OrExp(Expression s1, Expression s2) {
 		left = s1; right = s2;
 	}
+	public OrExp copy() {
+		OrExp exp = new OrExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		return left.evaluate().computeOr(right.evaluate());

@@ -8,6 +8,12 @@ public class StringLiteral extends Expression{
 	public String getS() {
 		return s;
 	}
+	public StringLiteral copy() {
+		StringLiteral exp = new StringLiteral("fyc"); //copy is different from new
+		exp.s = this.s;
+		exp.setConnection(connection);
+		return exp;
+	}
 	public StringLiteral(String num) {
 		//get away with the ' '
 		num = num.substring(1, num.length() - 1);

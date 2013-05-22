@@ -39,7 +39,9 @@ public class FatOptUtil {
 		}
 		return res;
 	}
-	public static boolean hasSubqueryExpression(Expression e) {
+	public static boolean hasSubqueryExpOrFunc(Expression e) {
+		if (e instanceof FuncExp)
+			return true;
 		Field[] fields = e.getClass().getDeclaredFields();
 		for (int i = 0;i < fields.length;i++) {
 			Object son = null;
@@ -52,7 +54,7 @@ public class FatOptUtil {
 				return true;
 			else
 			if (son instanceof Expression)
-				if (hasSubqueryExpression((Expression)son))
+				if (hasSubqueryExpOrFunc((Expression)son))
 					return true;
 		}
 		return false;

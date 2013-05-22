@@ -9,6 +9,11 @@ public class AsExp extends Expression {
 	public Expression getSource() {
 		return source;
 	}
+	public AsExp copy() {
+		AsExp exp = new AsExp(source.copy(), name);
+		exp.setConnection(connection);
+		return exp;
+	}
 	public String getName() {
 		return name;
 	}

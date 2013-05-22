@@ -14,6 +14,11 @@ public class NotEqualExp extends Expression {
 	public NotEqualExp(Expression s1, Expression s2) {
 		left = s1; right = s2;
 	}
+	public NotEqualExp copy() {
+		NotEqualExp exp = new NotEqualExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		int b = left.evaluate().compareTo(right.evaluate());

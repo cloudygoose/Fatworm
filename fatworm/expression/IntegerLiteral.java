@@ -8,6 +8,11 @@ public class IntegerLiteral extends Expression{
 	public IntegerLiteral(int num) {
 		number = num;
 	}
+	public IntegerLiteral copy() {
+		IntegerLiteral exp = new IntegerLiteral(number);
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public String getPrint(int old) {
 		return padding(old) + number + "\n";

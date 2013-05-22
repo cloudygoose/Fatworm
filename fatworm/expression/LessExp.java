@@ -11,6 +11,11 @@ public class LessExp extends Expression {
 	public LessExp(Expression s1, Expression s2) {
 		left = s1; right = s2;
 	}
+	public LessExp copy() {
+		LessExp exp = new LessExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		if (left.evaluate().compareTo(right.evaluate()) < 0)

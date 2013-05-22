@@ -11,6 +11,11 @@ public class MulExp extends Expression {
 	public MulExp(Expression s1, Expression s2) {
 		left = s1; right = s2;
 	}
+	public MulExp copy() {
+		MulExp exp = new MulExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		return left.evaluate().computeMul(right.evaluate());

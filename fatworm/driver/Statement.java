@@ -49,16 +49,13 @@ public class Statement implements java.sql.Statement {
 					AddSlotToPlan.addSlotToPlan(p);
 				if (Driver.logPlanTree)
 					Log.v("\n" + p.getPrint(0));
-				
-				
-				ArrayList<SelectPlan> slee = FatOptUtil.getRecSelectPlans(p, null);
-				for (int i = 0;i < slee.size();i++) {
-					SelectPlan se = slee.get(i);
-					Log.v("!!!!!!!!!!" + AddSlotToPlan.getAllReachSlots(se, null, 1).size());
-					Log.v("!@!@!@!@");
-					Log.v(AddSlotToPlan.getAllReachSlots(se, null, 1).get(0).getSlotPlan().getPrint(0));
+				if (Driver.pushDownSelect) {				
+					ArrayList<SelectPlan> slee = FatOptUtil.getRecSelectPlans(p, null);
+					for (int i = 0;i < slee.size();i++) {
+						SelectPlan sep = slee.get(i);
+						AddSlotToPlan.pushDownSelect(sep);
+					}
 				}
-				
 				
 				scan = p.getScan();
 				if (Driver.logScanTree)

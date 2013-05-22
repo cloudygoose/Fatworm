@@ -21,6 +21,11 @@ public class FuncExp extends Expression {
 	public Aggregator getAssocOverallAggregator() {
 		return assocOverallAggregator;
 	}
+	public FuncExp copy() {
+		FuncExp exp = new FuncExp(id.copy(), token);
+		exp.setConnection(connection);
+		return exp;
+	}
 	public FuncExp(IdExpression col, String to) {
 		id = col; token = to;
 		token = token.toUpperCase();

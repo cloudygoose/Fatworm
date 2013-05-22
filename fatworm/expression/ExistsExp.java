@@ -11,6 +11,11 @@ public class ExistsExp extends Expression {
 	public ExistsExp(Plan s) {
 		source = s;
 	}
+	public ExistsExp copy() {
+		ExistsExp exp = new ExistsExp(source);
+		exp.setConnection(connection);
+		return exp;
+	}
 	public FatType evaluate() throws Exception {
 		Scan scan = source.getScan();
 		scan.open();

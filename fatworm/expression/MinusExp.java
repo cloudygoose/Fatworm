@@ -15,7 +15,11 @@ public class MinusExp extends Expression {
 	public FatType evaluate() throws Exception {
 		return left.evaluate().computeMinus(right.evaluate());
 	}
-
+	public MinusExp copy() {
+		MinusExp exp = new MinusExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public String getPrint(int old) throws Exception {
 		return padding(old) + "MinusExp(\n" +

@@ -13,6 +13,11 @@ public class GreaterExp extends Expression {
 	public GreaterExp(Expression s1, Expression s2) {
 		left = s1; right = s2;
 	}
+	public GreaterExp copy() {
+		GreaterExp exp = new GreaterExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		//Log.v("!!" + left.getPrint(0));

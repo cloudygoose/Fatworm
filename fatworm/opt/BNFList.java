@@ -19,6 +19,9 @@ public class BNFList extends fatworm.expression.Expression{
 	public void remove(int ind) {
 		andList.remove(ind);
 	}
+	public Expression get(int k) {
+		return andList.get(k);
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		for (int i = 0;i < andList.size();i++)
@@ -31,7 +34,7 @@ public class BNFList extends fatworm.expression.Expression{
 		String res = padding(old) + "BNFListExp(\n";
 		for (int i = 0;i < andList.size();i++)
 			res += andList.get(i).getPrint(old + 1);
-		res = res + ")BNFListExp\n";
+		res = res + padding(old) + ")BNFListExp\n";
 		return res;
 	}
 }

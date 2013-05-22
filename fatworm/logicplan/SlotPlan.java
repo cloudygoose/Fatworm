@@ -20,6 +20,9 @@ public class SlotPlan extends Plan {
 		connection = c;
 		source = s; bnf = b;
 	}
+	public void addExp(Expression e) {
+		bnf.add(e);
+	}
 	@Override
 	public String getPrint(int old) throws Exception {
 		String res = padding(old) + "SlotPlan(\n" +

@@ -12,6 +12,11 @@ public class EqualExp extends Expression {
 	public EqualExp(Expression s1, Expression s2) {
 		left = s1; right = s2;
 	}
+	public EqualExp copy() {
+		EqualExp exp = new EqualExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		int b = left.evaluate().compareTo(right.evaluate());

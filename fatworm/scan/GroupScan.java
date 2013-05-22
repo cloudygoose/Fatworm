@@ -51,10 +51,14 @@ public class GroupScan extends Scan {
 		source.open();
 		env = new FuncEnv(idExp);
 		LinkedList<FuncExp> funcs = new LinkedList<FuncExp>();
-		if (expList != null)
+		if (expList != null) {
+			Log.v("searching expList");
 			Log.getAllFunc(expList, funcs);
-		if (having != null)
+		}
+		if (having != null) {
+			Log.v("searching having");
 			Log.getAllFunc(having, funcs);
+		}
 //		Log.v("!!");
 //		for (int i = 0;i < funcs.size();i++)
 //			Log.v(funcs.get(i).getPrint(0));

@@ -9,6 +9,14 @@ public class SubqueryExp extends Expression {
 	public SubqueryExp(Plan p) {
 		plan = p;
 	}
+	public Plan getPlan() {
+		return plan;
+	}
+	public SubqueryExp copy() {
+		SubqueryExp exp = new SubqueryExp(plan);
+		exp.setConnection(connection);
+		return exp;
+	}
 	public FatType evaluate() throws Exception {
 		Scan s = plan.getScan();
 		s.open();

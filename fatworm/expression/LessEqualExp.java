@@ -13,6 +13,11 @@ public class LessEqualExp extends Expression {
 	public LessEqualExp(Expression s1, Expression s2) {
 		left = s1; right = s2;
 	}
+	public LessEqualExp copy() {
+		LessEqualExp exp = new LessEqualExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		int b = left.evaluate().compareTo(right.evaluate());

@@ -9,6 +9,11 @@ public class BooleanLiteral extends Expression {
 	public BooleanLiteral(boolean v) {
 		bool = v;
 	}
+	public BooleanLiteral copy() {
+		BooleanLiteral exp = new BooleanLiteral(bool);
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public String getPrint(int old) {
 		return padding(old) + bool + "\n";

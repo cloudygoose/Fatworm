@@ -241,9 +241,15 @@ public class LogicPlanner extends PlanTranslater{
 	Plan translateFrom(CommonTree tr) throws Exception {
 		if (tr.getChildCount() == 1)
 			return translate(tr.getChild(0));
+		/*
 		Plan p = translate(tr.getChild(0));
 		tr.deleteChild(0);
 		return new ProductPlan(p, translateFrom(tr), connection);
+		*/
+		Plan p = translate(tr.getChild(tr.getChildCount() - 1));
+		tr.deleteChild(tr.getChildCount() - 1);
+		return new ProductPlan(translateFrom(tr), p, connection);
+		
 	}
 	
 }

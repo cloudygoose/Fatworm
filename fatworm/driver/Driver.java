@@ -105,8 +105,11 @@ public class Driver implements java.sql.Driver{
 	public static final int BLOCKLENGTH = 4096;
 	public static final int BUFFERSIZE = 500000;
 	public static final boolean logFile = false;
+	
 	public static final boolean addSlotPlan = true;
-	public static final boolean logPlanTree = true;
+	public static final boolean pushDownSelect = true;
+	
+	public static final boolean logPlanTree = false;
 	public static final boolean logScanTree = false;
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {

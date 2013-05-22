@@ -11,6 +11,11 @@ public class PlusExp extends Expression {
 	public PlusExp(Expression s1, Expression s2) {
 		left = s1; right = s2;
 	}
+	public PlusExp copy() {
+		PlusExp exp = new PlusExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		return left.evaluate().computeAdd(right.evaluate());

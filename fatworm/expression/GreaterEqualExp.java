@@ -14,6 +14,11 @@ public class GreaterEqualExp extends Expression {
 	public GreaterEqualExp(Expression s1, Expression s2) {
 		left = s1; right = s2;
 	}
+	public GreaterEqualExp copy() {
+		GreaterEqualExp exp = new GreaterEqualExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		int b = left.evaluate().compareTo(right.evaluate());

@@ -13,6 +13,11 @@ public class DivExp extends Expression {
 	public DivExp(Expression s1, Expression s2) {
 		left = s1; right = s2;
 	}
+	public DivExp copy() {
+		DivExp exp = new DivExp(left.copy(), right.copy());
+		exp.setConnection(connection);
+		return exp;
+	}
 	@Override
 	public FatType evaluate() throws Exception {
 		return left.evaluate().computeDiv(right.evaluate());

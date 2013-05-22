@@ -9,6 +9,8 @@ public class IdExpression extends Expression {
 	private String tableName, columnName;
 	public IdExpression(String t, String c) {
 		tableName = t;
+		if (t == null)
+			tableName = "";
 		columnName = c;
 	}
 	public String getTableName() {
@@ -16,6 +18,11 @@ public class IdExpression extends Expression {
 	}
 	public String getColumnName() {
 		return columnName;
+	}
+	public IdExpression copy() {
+		IdExpression exp = new IdExpression(tableName, columnName);
+		exp.setConnection(connection);
+		return exp;
 	}
 	@Override 
 	public FatType evaluate() throws Exception {
@@ -61,7 +68,8 @@ public class IdExpression extends Expression {
 	public boolean weakEquals(Object o) {
 		if (o instanceof IdExpression) {
 			IdExpression i = (IdExpression)o;
-			return Log.stringNameEqual(columnName, i.columnName);
+			return ((this.tableName.equals("") || i.tableName.equals("")) 
+					&& Log.stringNameEqual(columnName, i.columnName));
 		} else
 		throw new DevelopException();
 	}
