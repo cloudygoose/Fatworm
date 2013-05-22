@@ -38,24 +38,43 @@ public class Statement implements java.sql.Statement {
 		ParserManager parserManager = connection.parserManager;
 		LogicPlanner logicPlanner = connection.logicPlanner;
 		CommonTree t = parserManager.getCommonTree(sql); // get tree from parser
+		CommonTree t1 = parserManager.getCommonTree(sql); // get tree from parser
+		CommonTree t2 = parserManager.getCommonTree(sql); //get another tree, because the parse will delete some nodes in the tree
 		scan = null;
 		try {
 			//Log.v("now running sql : " + sql);
 			//parserManager.LogAST(t, "");
 			//Log.v("============AST complete.===============");
 			if (isQuery(t)) {
-				Plan p = logicPlanner.translate(t);
-				if (Driver.addSlotPlan)
-					AddSlotToPlan.addSlotToPlan(p);
+				LogicPlanner.productLeftMode = true;
+				Plan p2 = logicPlanner.translate(t2);
+				LogicPlanner.productLeftMode = false;
+				Plan p1 = logicPlanner.translate(t1);
+				if (Driver.addSlotPlan) {
+					AddSlotToPlan.addSlotToPlan(p2);
+					AddSlotToPlan.addSlotToPlan(p1);
+				}
 				if (Driver.logPlanTree)
-					Log.v("\n" + p.getPrint(0));
+					Log.v("\n" + p2.getPrint(0));
+				int sum1 = 0, sum2 = 0;
 				if (Driver.pushDownSelect) {				
-					ArrayList<SelectPlan> slee = FatOptUtil.getRecSelectPlans(p, null);
+					ArrayList<SelectPlan> slee = FatOptUtil.getRecSelectPlans(p2, null);
 					for (int i = 0;i < slee.size();i++) {
 						SelectPlan sep = slee.get(i);
-						AddSlotToPlan.pushDownSelect(sep);
+						sum2 += AddSlotToPlan.pushDownSelect(sep);
+					}
+					
+					slee = FatOptUtil.getRecSelectPlans(p1, null);
+					for (int i = 0;i < slee.size();i++) {
+						SelectPlan sep = slee.get(i);
+						sum1 += AddSlotToPlan.pushDownSelect(sep);
 					}
 				}
+				
+				Plan p;
+				p = p2;
+				if (Driver.pushDownSelect && sum1 > sum2 + 50)
+					p = p1;
 				
 				scan = p.getScan();
 				if (Driver.logScanTree)

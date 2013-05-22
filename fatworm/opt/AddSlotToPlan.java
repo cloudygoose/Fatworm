@@ -54,8 +54,9 @@ public class AddSlotToPlan {
 			res = getAllReachSlots(iter.next(), res, level + 1, exp);
 		return res;
 	}
-	public static void pushDownSelect(SelectPlan plan) {
+	public static int pushDownSelect(SelectPlan plan) {
 		BNFList list = FatOptUtil.getAndComToList(plan.getCondition(), null);
+		int sum = 0;
 		for (int kk = 0;kk < list.size();kk++) {
 			Expression exp = list.get(kk);
 			if (FatOptUtil.hasSubqueryExpOrFunc(exp))
@@ -73,7 +74,9 @@ public class AddSlotToPlan {
 				}
 			}
 			maxSlot.getSlotPlan().addExp(maxSlot.getExp());
+			sum += maxLevel;
 		}
+		return sum;
 	}
 }
 

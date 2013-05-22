@@ -61,7 +61,8 @@ public class Driver implements java.sql.Driver{
 	 * cont- The generateTuple() in each scan is a powerful method(get from a sandbox) that could get the schema of this scan
 	 * OPT
 	 * cont- OPT is done on PLAN level, although it uses the generateTuple in the scanLevel
-	 * cont- OPT:Driver.addSlotPlan
+	 * cont1- OPT:try left product tree or right product tree in Statement.java
+	 * cont2- OPT:Driver.addSlotPlan
 	 * cont- first, every tablePlan and product plan gets a SlotPlan as its father as long as it doesn't have s SelectPlan as its father
 	 * cont- the pushdown process stops at : projectplan,groupplan,OneTuplePlan
 	 * cont- the pushdown add a SlotPlan above a ProjectPlan, a FetchTable, ProductPlan
