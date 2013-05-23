@@ -81,8 +81,10 @@ public class IdExpression extends Expression {
 			IdExpression i = (IdExpression)o;
 			return Log.stringNameEqual(columnName, i.columnName) && 
 					Log.stringNameEqual(tableName, i.tableName);
-		} else
-		throw new DevelopException();
+		} else {
+			Log.v(o.toString());
+			throw new DevelopException();
+		}
 	}
 
 }

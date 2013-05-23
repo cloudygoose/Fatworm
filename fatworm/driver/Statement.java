@@ -91,9 +91,12 @@ public class Statement implements java.sql.Statement {
 				if (Driver.tryPattern) {
 					ArrayList<SlotPlan> slots = FatOptUtil.getRecSlotPlans(p, null);
 					for (int i = 0;i < slots.size();i++) {
-						ff = Patterns.tryPatternTwo(slots.get(i));
-						if (ff) {
-							Log.v("Pattern2 opted!!");
+						if (Patterns.tryPatternTwo(slots.get(i))) {
+							//Log.v("Pattern2 opted!!");
+							bb = true;
+						} else
+						if (Patterns.tryPatternThree(slots.get(i))) {
+							//Log.v("Pattern3 opted!!");
 							bb = true;
 						}
 					}

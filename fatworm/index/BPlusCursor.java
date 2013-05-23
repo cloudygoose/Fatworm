@@ -20,8 +20,11 @@ public class BPlusCursor {
 	}
 	public void setFirstBiggerThan(FatType first) {
 		int level = 1;
+		//Log.v("BPlus : " + index.rootBlock);
 		nowNode = BPlusNode.getInstanceFromFatBlock(index.rootBlock, index.keyType, index, 1, true, true);
 		while (level != index.maxLevel) {
+			//if (first instanceof FatInteger && ((FatInteger) first).getNumber() == -4893)
+				//Log.v(nowOffset + " " + nowNode.blockNum + " " + nowNode.pairs.size());
 			List<IndexPair> pairs = nowNode.pairs;
 			int i;
 			for (i = 0;i < pairs.size();i++)
@@ -36,6 +39,7 @@ public class BPlusCursor {
 			if (i == pairs.size())
 				throw new DevelopException();
 		}
+		//Log.v("BPlusCursor : " + nowNode.pairs.size());
 		nowOffset = 0;
 		while (true) {
 			if (nowOffset == nowNode.pairs.size() && nowNode.rightBrotherB == -1)
@@ -50,6 +54,10 @@ public class BPlusCursor {
 		}
 		beginNode = nowNode;
 		beginOffset = nowOffset;
+		if (first instanceof FatInteger && ((FatInteger) first).getNumber() == -4893) {
+			//index.logBPlus();
+			//Log.v(nowOffset + " " + nowNode.blockNum);
+		}
 	}
 	public boolean next() {
 		nextT = null;

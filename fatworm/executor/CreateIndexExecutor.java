@@ -17,6 +17,7 @@ public class CreateIndexExecutor extends Executor {
 		trans = statement.getConnection().logicPlanner;
 	}
 	public void execute() throws Exception{
+		/*
 		TableMgr tableMgr = statement.getConnection().
 				getDatabaseMgr().currentTableMgr;
 		String indexName = tree.getChild(0).getText();
@@ -24,5 +25,6 @@ public class CreateIndexExecutor extends Executor {
 		String colName = tree.getChild(2).getText();
 		FatIndex index = tableMgr.getTable(tableName).
 				createIndex(indexName, colName);
+		*/
 	}
 }
