@@ -113,6 +113,7 @@ public class Table implements Serializable {
 		}
 	}
 	public boolean hasIndexOn(String colName) {
+		//Log.v(indexs.keySet().toString());
 		if (indexs.get(colName.toUpperCase()) == null)
 			return false;
 		return true;

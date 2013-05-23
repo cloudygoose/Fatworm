@@ -20,7 +20,7 @@ public class AliasPlan extends Plan {
 	@Override
 	public String getPrint(int old) throws Exception {
 		return padding(old) + "AliasPlan(->" + alias + "\n" +
-				source.getPrint(old + 1) + padding(old) + ")\n";
+				source.getPrint(old + 1) + padding(old) + ")AliasPlan\n";
 	}
 	public Scan getScan() throws Exception {
 		return new AliasScan(source.getScan(), alias, connection);

@@ -2,7 +2,8 @@ package fatworm.logicplan;
 
 import fatworm.opt.BNFList;
 import fatworm.scan.*;
-
+//PatternOnePlan is contained by PatternTwo !!!!
+//So this file is only a memory
 public class PatternOnePlan extends Plan {
 	String a1, t1, c1, a2, t2, c2;
 	public PatternOnePlan(String a1, String t1, String c1, String a2, String t2, String c2, fatworm.driver.Connection c) {

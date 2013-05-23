@@ -12,6 +12,8 @@ public class IdExpression extends Expression {
 		if (t == null)
 			tableName = "";
 		columnName = c;
+		if (c == null)
+			columnName = "";
 	}
 	public String getTableName() {
 		return tableName;

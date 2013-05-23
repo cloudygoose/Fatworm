@@ -29,12 +29,18 @@ public class CreateTableExecutor extends Executor {
 		Table newTable = tableMgr.createTable(tableName);
 		for (int i = 1;i < tree.getChildCount();i++) {
 			if (isCreateDefinition(tree.getChild(i))) {
-				newTable.addColumn(createColumn((CommonTree)(tree.getChild(i))));
-			} else 
-			if (isPrimaryKey(tree.getChild(i))) {
-				String indexCol = tree.getChild(i).getChild(0).getText();
-				newTable.createIndex(indexCol, indexCol.toUpperCase());
+				Column newC = createColumn((CommonTree)(tree.getChild(i)));
+				newTable.addColumn(newC);
 			} 
+		}
+		for (int i = 0;i < newTable.getSchema().getColumnNumber();i++) {
+			Column c = newTable.getSchema().getColumn(i);
+			if (c.getType() instanceof FatTimeStamp || c.getType() instanceof FatDateTime || c.getType() instanceof FatDecimal)
+				continue;
+			if (c.getType().getByteArrayLength() < 80) {
+				newTable.createIndex(c.getName(), c.getName());
+				//Log.v("CreateTableExe : " + newTable.getName() + " " +  c.getName());
+			}			
 		}
 	}
 	Column createColumn(CommonTree t) throws Exception {

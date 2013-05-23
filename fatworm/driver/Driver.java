@@ -36,9 +36,7 @@ import fatworm.index.*;
 public class Driver implements java.sql.Driver{
 	/*
 	 * TODO:
-	 * Now: condition push-down
-	 * createIndex should scan all the tuples in the table
-	 * Index's update, delete, and insert
+	 * 
 	 * Index's opt
 	 */
 	/*
@@ -105,7 +103,7 @@ public class Driver implements java.sql.Driver{
 			throw new RuntimeException("Can't register driver!");
 		}
 	}
-	public static final int BLOCKLENGTH = 50;
+	public static final int BLOCKLENGTH = 4096;
 	public static final int BUFFERSIZE = 500000;
 	public static final boolean logFile = false;
 	

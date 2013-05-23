@@ -10,6 +10,7 @@ public class FatChar extends FatType implements Serializable {
 	public FatChar() {
 		super();
 		length = -1;
+		s = "";
 	}
 	public FatChar(String ss) {
 		super();
@@ -18,6 +19,9 @@ public class FatChar extends FatType implements Serializable {
 	public FatChar(int l) {
 		super();
 		length = l;
+		s = "";
+		for (int i = 0;i < l;i++)
+			s += " ";
 	}
 	public int getLength() {
 		return length;

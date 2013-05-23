@@ -9,7 +9,7 @@ import fatworm.storage.*;
 public class BPlusCursor {
 	FatIndex index;
 	BPlusNode nowNode;
-	int nowOffset;
+	public int nowOffset;
 	BPlusNode beginNode;
 	int beginOffset;
 	Tuple nextT;
@@ -55,14 +55,13 @@ public class BPlusCursor {
 		nextT = null;
 		if (nowOffset == nowNode.pairs.size())
 			return false;
-		
+
 		int pos = nowNode.pairs.get(nowOffset).getFileOffset();
 		int Bid = pos / Driver.BLOCKLENGTH;
-		pos = pos % Driver.BLOCKLENGTH + 1;
+		pos = (pos % Driver.BLOCKLENGTH) + 1;
 		FatBlock block = index.connection.bufferManager.getPage(new PageId(index.table.getFileName(), Bid, index.table));
 		byte[] bt = block.getBytes(pos, index.table.getSchema().getByteArrayLength());
-		nextT = index.table.getSchema().getTupleFromByteArray(bt);
-		
+		this.nextT = index.table.getSchema().getTupleFromByteArray(bt);
 		nowOffset++;
 		if (nowOffset == nowNode.pairs.size()) {
 			if (nowNode.rightBrotherB != -1) {
