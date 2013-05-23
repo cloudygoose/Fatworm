@@ -52,6 +52,8 @@ public class TableMgr implements Serializable{
 		}
 	}
 	public void drop(String name) {
+		if (tables.get(name.toLowerCase()) == null)
+			return;
 		tables.get(name.toLowerCase()).drop();
 		tables.remove(name.toLowerCase());
 	}

@@ -85,11 +85,13 @@ public class Statement implements java.sql.Statement {
 					Log.v(p.getPrint(0));
 				}
 				
+				//Log.v("statement : " + p.getPrint(0));
+				
 				boolean bb = false, ff = false;
-				if (Driver.patternOne) {
+				if (Driver.tryPattern) {
 					ArrayList<SlotPlan> slots = FatOptUtil.getRecSlotPlans(p, null);
 					for (int i = 0;i < slots.size();i++) {
-						ff = Patterns.isPatternTwo(slots.get(i));
+						ff = Patterns.tryPatternTwo(slots.get(i));
 						if (ff) {
 							Log.v("Pattern2 opted!!");
 							bb = true;

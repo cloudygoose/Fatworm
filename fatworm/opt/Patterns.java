@@ -35,7 +35,7 @@ public class Patterns {
                 )BNFListExp
             )SlotPlan
 	 */
-	public static boolean isPatternOne(SlotPlan slot) {
+	public static boolean tryPatternOne(SlotPlan slot) {
 		try {
 			String a1, c1, a2, c2, t1, t2;
 			BNFList bnf = slot.getBnf();
@@ -99,7 +99,7 @@ public class Patterns {
                 )BNFListExp
             )SlotPlan
 	 */
-	public static boolean isPatternTwo(SlotPlan slot) {
+	public static boolean tryPatternTwo(SlotPlan slot) {
 		try {
 			String a2, c2, t2;
 			IdExpression e1;
@@ -131,4 +131,40 @@ public class Patterns {
 			return false;
 		}
 	}
+	/* PatternThree
+	 * log : statement : ProjectPlan(
+        SlotPlan(
+            SOURCE FROM
+            FetchTablePlan(IndexTest)
+            CONDITION ON
+            BNFListExp(
+                GreaterEqualExp(
+                    ID:x
+                    MinusExp(
+                        0
+                        12990
+                    )Minus
+                )And
+                LessEqualExp(
+                    ID:x
+                    MinusExp(
+                        0
+                        10143
+                    )Minus
+                )And
+                GreaterEqualExp(
+                    ID:y
+                    3492
+                )And
+                LessEqualExp(
+                    ID:y
+                    MinusExp(
+                        0
+                        43663
+                    )Minus
+                )And
+            )BNFListExp
+        )SlotPlan
+	sql : select count(y) from IndexTest where x >= -12990 and x <= -10143 and y >= 3492 and y <= -43663
+	 */
 }

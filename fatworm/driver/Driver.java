@@ -113,7 +113,7 @@ public class Driver implements java.sql.Driver{
 	public static final boolean logPlanTree = false;
 	public static final boolean logScanTree = false;
 	public static final boolean logPlanAfterPush = false;
-	public static final boolean patternOne = true;
+	public static final boolean tryPattern = true;
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
 		// TODO Auto-generated method stub
