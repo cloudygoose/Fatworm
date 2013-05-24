@@ -38,6 +38,11 @@ public class Driver implements java.sql.Driver{
 	 * TODO:
 	 * 	bug : 4096 can't pass isvarcharvarchar test
 	 *  bug : select a from test1 order by b in Statement.java
+	 *  bug : 
+	 *  		for (int i = 0;i < tupleColumns.size();i++)
+			if (tupleColumns.get(i).histEquals(id))
+				return tupleColumns.get(i).getValue();
+			added a nonsense funcExp to a null FuncList in GroupScan.open()
 	 */
 	/*
 	 * For test, just run Driver.test() , you need to modify Statement.java

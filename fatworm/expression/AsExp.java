@@ -1,5 +1,6 @@
 package fatworm.expression;
 
+import fatworm.log.Log;
 import fatworm.logicplan.Plan;
 import fatworm.type.FatType;
 
@@ -18,7 +19,9 @@ public class AsExp extends Expression {
 		return name;
 	}
 	public FatType evaluate() throws Exception {
+		Log.v("AsExp : " + source.getPrint(0));
 		FatType f = source.evaluate();
+		f.assocHisColName = f.assocColumnName;
 		f.assocColumnName = name;
 		return f;
 	}

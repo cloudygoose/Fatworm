@@ -33,7 +33,7 @@ public class ExpList {
 		Tuple tuple = new Tuple();
 		for (int i = 0;i < expList.size();i++) {
 			FatType value = expList.get(i).evaluate();
-			TupleColumn col = new TupleColumn(value.assocTableName, value.assocColumnName, value);
+			TupleColumn col = new TupleColumn(value.assocTableName, value.assocColumnName, value.assocHisColName, value);
 			tuple.addColumn(col);
 		}
 		return tuple;

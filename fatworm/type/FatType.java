@@ -10,6 +10,7 @@ public class FatType implements Comparable, Serializable {
 	protected boolean isNull;
 	public String assocTableName;
 	public String assocColumnName;
+	public String assocHisColName;
 	public boolean isNull() {
 		return isNull;
 	}
@@ -20,6 +21,7 @@ public class FatType implements Comparable, Serializable {
 		isNull = false;
 		assocTableName = null;
 		assocColumnName = null;
+		assocHisColName = "";
 	}
 	public FatType copy() {
 		try {

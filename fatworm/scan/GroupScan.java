@@ -60,6 +60,11 @@ public class GroupScan extends Scan {
 //		Log.v("!!");
 //		for (int i = 0;i < funcs.size();i++)
 //			Log.v(funcs.get(i).getPrint(0));
+		if (funcs.size() == 0) {
+			TupleColumn col = source.generateExTuple().get(0);
+			FuncExp newF = new FuncExp(new IdExpression(col.getTableName(), col.getColumnName()), "min");
+			funcs.add(newF);
+		}
 		
 		env.prepareMaps(funcs);
 		

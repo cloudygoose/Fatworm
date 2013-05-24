@@ -83,6 +83,10 @@ public class FatTimeStamp extends FatType implements Serializable {
 		return b;
 	}
 	@Override
+	public String getPrint(int old) {
+		return Log.padding(old) + "FatTimeStamp : " + timeStamp.toString();
+	}
+	@Override
 	public FatTimeStamp newZeroInstance() {
 		return new FatTimeStamp(new java.sql.Timestamp(0));
 	}

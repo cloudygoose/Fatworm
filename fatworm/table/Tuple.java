@@ -86,6 +86,9 @@ public class Tuple {
 		for (int i = 0;i < tupleColumns.size();i++)
 			if (tupleColumns.get(i).weakEquals(id))
 				return tupleColumns.get(i).getValue();
+		//for (int i = 0;i < tupleColumns.size();i++)
+		//	if (tupleColumns.get(i).histEquals(id))
+		//		return tupleColumns.get(i).getValue();
 		return null;
 	}
 	public boolean testValueEqual(Tuple t) {

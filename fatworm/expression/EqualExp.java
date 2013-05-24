@@ -19,6 +19,9 @@ public class EqualExp extends Expression {
 	}
 	@Override
 	public FatType evaluate() throws Exception {
+		//Log.v("EqualEXP : ");
+		//Log.v(left.evaluate().getPrint(0));
+		//Log.v(right.evaluate().getPrint(0));
 		int b = left.evaluate().compareTo(right.evaluate());
 		if (b == 0)
 			return new FatBoolean(true);
