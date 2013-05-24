@@ -1,5 +1,6 @@
 package fatworm.type;
 import java.math.BigDecimal;
+
 import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 
@@ -98,7 +99,11 @@ public class FatFloat extends FatType implements Serializable {
 	public FatType computeMinus(FatType t) {
 		if (t instanceof FatFloat) {
 			FatFloat d = (FatFloat)t;
-			return newInstance(number.subtract(d.getNumber()));
+			return this.newInstance(number.subtract(d.getNumber()));
+		} else
+		if (t instanceof FatInteger) {
+			FatInteger i = (FatInteger)t;
+			return this.newInstance(number.subtract(i.getBigDecimal()));
 		} else
 		throw new DevelopException();
 	}
@@ -107,6 +112,10 @@ public class FatFloat extends FatType implements Serializable {
 		if (t instanceof FatFloat) {
 			FatFloat d = (FatFloat)t;
 			return newInstance(number.multiply(d.getNumber()));
+		} else
+		if (t instanceof FatInteger) {
+			FatInteger i = (FatInteger)t;
+			return this.newInstance(number.multiply((i.getBigDecimal())));
 		} else
 		throw new DevelopException();
 	}

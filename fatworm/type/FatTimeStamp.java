@@ -14,6 +14,9 @@ public class FatTimeStamp extends FatType implements Serializable {
 	public FatTimeStamp(java.sql.Timestamp d) {
 		timeStamp = d;
 	}
+	public FatTimeStamp(long ll) {
+		timeStamp = new java.sql.Timestamp(ll);
+	}
 	public Timestamp getTimeStamp() {
 		return timeStamp;
 	}
@@ -53,6 +56,14 @@ public class FatTimeStamp extends FatType implements Serializable {
 			return newNullInstance();
 		if (f instanceof FatTimeStamp) {
 			return new FatTimeStamp(((FatTimeStamp)f).timeStamp);
+		} else
+		if (f instanceof FatChar) {
+			try {
+				return new FatTimeStamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse((((FatChar)f).s)).getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			return null;
 		} else
 		throw new DevelopException();
 	}

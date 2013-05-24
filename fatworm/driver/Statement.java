@@ -38,6 +38,8 @@ public class Statement implements java.sql.Statement {
 //		if (sql.charAt(sql.length() - 1) == ';')
 //			sql = sql.substring(0, sql.length() - 1);
 //		Log.v(sql);
+		//if (sql.contains("select a from test1 order by b"))
+		//	sql = "select a from (select * from test1 order by b) as aa\n";
 		ParserManager parserManager = connection.parserManager;
 		LogicPlanner logicPlanner = connection.logicPlanner;
 		CommonTree t = parserManager.getCommonTree(sql); // get tree from parser
@@ -51,8 +53,11 @@ public class Statement implements java.sql.Statement {
 			if (isQuery(t)) {
 				LogicPlanner.productLeftMode = true;
 				Plan p2 = logicPlanner.translate(t2);
+				//Log.v(p2.getPrint(0));
+				p2 = Patterns.fuckOrderProjectPlan(p2);
 				LogicPlanner.productLeftMode = false;
 				Plan p1 = logicPlanner.translate(t1);
+				p1 = Patterns.fuckOrderProjectPlan(p1);
 				if (Driver.addSlotPlan) {
 					AddSlotToPlan.addSlotToPlan(p2);
 					AddSlotToPlan.addSlotToPlan(p1);
@@ -77,6 +82,7 @@ public class Statement implements java.sql.Statement {
 				}
 				
 				Plan p;
+				
 				p = p2;
 				if (Driver.pushDownSelect && sum1 > sum2 + 50)
 					p = p1;
@@ -84,6 +90,7 @@ public class Statement implements java.sql.Statement {
 					Log.v("logPlanAfterPush");
 					Log.v(p.getPrint(0));
 				}
+				
 				
 				//Log.v("statement : " + p.getPrint(0));
 				

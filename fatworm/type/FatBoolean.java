@@ -20,11 +20,11 @@ public class FatBoolean extends FatType implements Serializable {
 			bb.put((byte)1);
 		else
 			bb.put((byte)0);
-		byte[] b = new byte[1];
-		if (b.equals(true))
-			b[0] = 1;
-		else b[0] = 0;
-		bb.put(b);
+		byte[] bt = new byte[1];
+		if (this.b == true)
+			bt[0] = 1;
+		else bt[0] = 0;
+		bb.put(bt);
 	}
 	@Override
 	public int getByteArrayLength() {
@@ -66,8 +66,12 @@ public class FatBoolean extends FatType implements Serializable {
 		} else
 		throw new DevelopException();
 	}
+	@Override
+	public FatBoolean newZeroInstance() {
+		return new FatBoolean(false);
+	}
 	public boolean getBool() {
-		return b;
+		return this.b;
 	}
 	@Override
 	public FatBoolean computeAnd(FatType t) {

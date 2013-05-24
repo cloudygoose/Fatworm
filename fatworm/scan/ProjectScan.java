@@ -98,8 +98,8 @@ public class ProjectScan extends Scan {
 		//Log.v("!!!");
 		Tuple t = source.getTuple();
 		connection.tupleStack.push(t);
-		if (expList.isStarExp())
-			nextT = t;
+		if (expList.firstStarExp())
+			nextT = expList.evaluateFirstStar(t);
 		else
 			nextT = expList.evaluate();
 		connection.tupleStack.pop();

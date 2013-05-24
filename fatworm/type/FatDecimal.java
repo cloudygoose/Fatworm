@@ -8,7 +8,7 @@ import fatworm.expression.*;
 import fatworm.log.*;
 public class FatDecimal extends FatType implements Serializable {
 	private static final long serialVersionUID = 13L;
-	public int serialLength = 20;
+	public int serialLength = 40;
 	int p1, p2;
 	public BigDecimal number;
 	public FatDecimal() {
@@ -55,6 +55,9 @@ public class FatDecimal extends FatType implements Serializable {
 		} else
 		if (num instanceof FatInteger) {
 			fd.number = new BigDecimal(((FatInteger)num).getNumber());
+		} else
+		if (num instanceof FatChar) {
+			fd.number = new BigDecimal(((FatChar)num).s);
 		} else
 		throw new DevelopException();
  		return fd;

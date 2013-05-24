@@ -1,11 +1,13 @@
 package fatworm.opt;
 
+
 import fatworm.log.*;
 import fatworm.logicplan.*;
 import fatworm.expression.*;
 import fatworm.table.*;
 import fatworm.type.*;
 import fatworm.index.*;
+import java.util.*;
 
 public class Patterns {
 	/* PatternOne
@@ -228,6 +230,43 @@ public class Patterns {
 		} catch (Exception e) {
 			//e.printStackTrace();
 			return false;
+		}
+	}
+	/*
+	 *  OrderPlan(
+    ORDERLIST:
+    ID:b
+    ASC
+    SOURCE:
+    ProjectPlan(
+        ExpList:(
+            ID:a
+        )ExpList
+        	FetchTablePlan(test1)
+    	)Project
+	)OrderPlan
+	 */
+	public static Plan fuckOrderProjectPlan(Plan p) {
+		try {
+			OrderPlan order = (OrderPlan)p;
+			ArrayList<IdExpression> ids = order.getIdList();
+			ArrayList<Boolean> bools = order.getAscList();
+			ProjectPlan project = (ProjectPlan)order.getSource();
+			Tuple testT = project.getScan().generateExTuple();
+			boolean need = false;
+			for (int i = 0;i < ids.size();i++) 
+				if (testT.getValueFromIdStrong(ids.get(i)) == null) {
+					need = true;
+					break;
+				}
+			if (!need)
+				return p;
+			Plan ss = project.getSource();
+			order.setSource(ss);
+			project.setSource(order);
+			return project;
+		} catch (Exception e) {
+			return p;
 		}
 	}
 }

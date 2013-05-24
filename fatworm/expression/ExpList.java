@@ -38,15 +38,21 @@ public class ExpList {
 		}
 		return tuple;
 	}
-	public boolean isStarExp() {
+	public Tuple evaluateFirstStar(Tuple tuple) throws Exception{
+		for (int i = 1;i < expList.size();i++) {
+			FatType value = expList.get(i).evaluate();
+			TupleColumn col = new TupleColumn(value.assocTableName, value.assocColumnName, value);
+			tuple.addColumn(col);
+		}
+		return tuple;
+	}
+	public boolean firstStarExp() {
 		boolean findStar = false;
-		for (int i = 0;i < expList.size();i++)
+		for (int i = 0;i < 1;i++)
 			if (expList.get(i) instanceof StarExp) {
 				findStar = true;
 			}
 		if (findStar) {
-			if (expList.size() != 1)
-				throw new DevelopException();
 			return true;
 		}
 		return false;

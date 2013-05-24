@@ -174,8 +174,12 @@ public class LogicPlanner extends PlanTranslater{
 		if (isFloatLiteral(tr))
 			e = new FloatLiteral(new BigDecimal(tr.getText()));
 		else
-		if (isIntegerLiteral(tr))
-			e = new IntegerLiteral(Integer.parseInt(tr.getText()));
+		if (isIntegerLiteral(tr)) {
+			if (tr.getText().length() > 16)
+				e = new StringLiteral("'" + tr.getText() + "'");
+			else
+				e = new IntegerLiteral(Integer.parseInt(tr.getText()));
+		}
 		else
 		if (isStringLiteral(tr))
 			e = new StringLiteral(tr.getText());

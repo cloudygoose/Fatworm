@@ -36,8 +36,8 @@ import fatworm.index.*;
 public class Driver implements java.sql.Driver{
 	/*
 	 * TODO:
-	 * 
-	 * Index's opt
+	 * 	bug : 4096 can't pass isvarcharvarchar test
+	 *  bug : select a from test1 order by b in Statement.java
 	 */
 	/*
 	 * For test, just run Driver.test() , you need to modify Statement.java
@@ -103,7 +103,7 @@ public class Driver implements java.sql.Driver{
 			throw new RuntimeException("Can't register driver!");
 		}
 	}
-	public static final int BLOCKLENGTH = 4096;
+	public static final int BLOCKLENGTH = 8192;
 	public static final int BUFFERSIZE = 500000;
 	public static final boolean logFile = false;
 	
@@ -154,7 +154,7 @@ public class Driver implements java.sql.Driver{
 		Statement stmt = connection.createStatement();
 		stmt.execute("create database test");
 		stmt.execute("use test");
-		stmt.execute("create table test(a int not null auto_increment, " +
+		stmt.execute("create table test(a int not null auto_increment, c int, " +
 				"b varchar(3) default 'aaa', primary key(a))");
 		stmt.execute("create table test2(aa int not null auto_increment, " + 
 				"b varchar(3) default 'aaa')");
@@ -171,14 +171,15 @@ public class Driver implements java.sql.Driver{
 		while (cursor.next())
 			Log.v(cursor.getT().getPrint());
 		*/
-		stmt.execute("create index fyc on test(a)");
-		stmt.execute("insert into test values (1, 'aa')");
-		stmt.execute("insert into test values (3, 'aa')");
-		stmt.execute("insert into test (a) values(2)");
-		stmt.execute("insert into test values (1, 'aa')");
-		stmt.execute("insert into test values (3, 'aa')");
-		stmt.execute("insert into test (a) values(2)");
-		stmt.execute("select * from test order by a");
+		//stmt.execute("create index fyc on test(a)");
+		stmt.execute("insert into test values (1,2, 'aa')");
+		stmt.execute("insert into test values (3,3, 'aa')");
+		stmt.execute("insert into test (a, c) values(2,3)");
+		stmt.execute("insert into test values (1, 2,'aa')");
+		stmt.execute("insert into test values (3, 3,'aa')");
+		stmt.execute("insert into test (a, c) values(2, 3)");
+		stmt.execute("update test set b = 'aaa' where c = 2");
+		stmt.execute("select * from test");
 		stmt.execute("drop index fyc on test");
 		stmt.execute("drop table test");
 		stmt.execute("drop table test2");
