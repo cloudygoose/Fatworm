@@ -71,6 +71,7 @@ public class Driver implements java.sql.Driver{
 	 * cont- first, every tablePlan and product plan gets a SlotPlan as its father as long as it doesn't have s SelectPlan as its father
 	 * cont- the pushdown process stops at : projectplan,groupplan,OneTuplePlan
 	 * cont- the pushdown add a SlotPlan above a ProjectPlan, a FetchTable, ProductPlan
+	 * cont4- (A and B) or C -> (A or C) and (B or C)
 	 */
 	/*
 	 * implementation notes:

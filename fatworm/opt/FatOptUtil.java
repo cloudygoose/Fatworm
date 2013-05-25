@@ -12,7 +12,7 @@ public class FatOptUtil {
 		if (res == null)
 			res = new BNFList();
 		if (!(e instanceof AndExp)) {
-			if (e instanceof OrExp && ((OrExp)e).getRight() instanceof AndExp && ss < 10) {
+			if (e instanceof OrExp && ((OrExp)e).getRight() instanceof AndExp && ss < 20) {
 				Expression left = ((OrExp)e).getLeft();
 				Expression left1 = ((AndExp)((OrExp)e).getRight()).getLeft();
 				Expression right1 = ((AndExp)((OrExp)e).getRight()).getRight();

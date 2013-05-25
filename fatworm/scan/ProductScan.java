@@ -60,7 +60,7 @@ public class ProductScan extends Scan{
 		for (int i = 0;i < bb.size();i++) {
 			nextT.addColumn(bb.get(i));
 		}
-		//kk++;
+		kk++;
 		//if (kk % 100 == 0)
 		//	Log.v(kk);
 		return true;

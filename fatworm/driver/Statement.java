@@ -83,7 +83,7 @@ public class Statement implements java.sql.Statement {
 				}
 				
 				Plan p;
-				Log.v("sum2 : " + sum2);
+				//Log.v("sum2 : " + sum2);
 				p = p2;
 				if (Driver.pushDownSelect && sum1 > sum2 + 50)
 					p = p1;
@@ -112,7 +112,7 @@ public class Statement implements java.sql.Statement {
 				//Log.v("Statement : " + p.getPrint(0));
 				//Log.v(p.getPrint(0));
 				scan = p.getScan();
-				Log.v(scan.getPrint(0));
+				//Log.v(scan.getPrint(0));
 				if (Driver.logScanTree)
 					Log.v("\n" + scan.getPrint(0));
 				
