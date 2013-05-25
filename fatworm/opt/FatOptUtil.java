@@ -7,10 +7,20 @@ import java.lang.reflect.Field;
 import java.util.*;
 //The most naive BNF geneator!!
 public class FatOptUtil {
+	public static int ss = 1;
 	public static BNFList getAndComToList(Expression e, BNFList res) {
 		if (res == null)
 			res = new BNFList();
 		if (!(e instanceof AndExp)) {
+			if (e instanceof OrExp && ((OrExp)e).getRight() instanceof AndExp && ss < 10) {
+				Expression left = ((OrExp)e).getLeft();
+				Expression left1 = ((AndExp)((OrExp)e).getRight()).getLeft();
+				Expression right1 = ((AndExp)((OrExp)e).getRight()).getRight();
+				ss++;
+				res = getAndComToList(new OrExp(left1, left), res);
+				res = getAndComToList(new OrExp(right1, left), res);
+				//Log.v("FatOptUtil : Or Opt !");
+			} else
 			res.add(e);
 			return res;
 		}

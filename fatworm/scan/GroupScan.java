@@ -1,5 +1,6 @@
 package fatworm.scan;
 import fatworm.driver.Driver;
+
 import fatworm.expression.*;
 import fatworm.index.*;
 import fatworm.log.Log;
@@ -20,6 +21,7 @@ public class GroupScan extends Scan {
 	Tuple nextT;
 	Tuple exT;
 	boolean findExTuple;
+	TreeMap<FatType, Tuple> tupleFuckMap;
 	public GroupScan(Scan s, ExpList list, IdExpression id, Expression h, fatworm.driver.Connection c) throws Exception {
 		connection = c;
 		source = s;
@@ -30,6 +32,40 @@ public class GroupScan extends Scan {
 		findExTuple = false;
 		//Ex
 		Scan tmp = source;
+
+		//deal with query like
+		//select id as a, name as b from student group by b
+		//having name > any (select name from student where a < id) 
+		
+		IdExpression havFuck = null;
+		if (having != null && having instanceof GreaterExp) {
+			if (((GreaterExp)having).getLeft() instanceof IdExpression)
+				havFuck = (IdExpression)((GreaterExp)having).getLeft();
+		}
+		if (having != null && having instanceof GreaterEqualExp) {
+			if (((GreaterEqualExp)having).getLeft() instanceof IdExpression)
+				havFuck = (IdExpression)((GreaterEqualExp)having).getLeft();
+		}
+		
+		ArrayList<IdExpression> asFromList = new ArrayList<IdExpression>();
+		ArrayList<String> asToList = new ArrayList<String>();
+		for (int i = 0;i < expList.getExpList().size();i++)
+			if (expList.getExpList().get(i) instanceof AsExp) {
+				AsExp asExp = (AsExp)(expList.getExpList().get(i));
+				if (!(asExp.getSource() instanceof IdExpression))
+						continue;
+				asFromList.add((IdExpression)asExp.getSource());
+				asToList.add(asExp.getName());
+				if (idExp.strongEquals(new IdExpression("", asExp.getName()))) {
+					idExp = (IdExpression)asExp.getSource();
+				}
+				if (havFuck != null && havFuck.strongEquals((IdExpression)asExp.getSource()))
+					havFuck.setColumnName(asExp.getName());
+			}
+		
+		
+		
+		
 		source = new OneTupleScan(connection, tmp.generateExTuple());
 		findExTuple = true;
 		open();
@@ -67,10 +103,16 @@ public class GroupScan extends Scan {
 		}
 		
 		env.prepareMaps(funcs);
+		tupleFuckMap = new TreeMap<FatType, Tuple>();
 		
 		while (source.next()) {
-			//Log.v("!!" + source.getTuple().getPrint());
+			//Log.v("GroupScan!!" + source.getTuple().getPrint());
 			env.accept(source.getTuple());
+			
+			//fuck
+			FatType g = source.getTuple().getValueFromIdSW(this.idExp);
+			if (tupleFuckMap.get(g) == null)
+				tupleFuckMap.put(g, source.getTuple());
 		}
 		env.open();
 		nextT = null;
@@ -86,16 +128,25 @@ public class GroupScan extends Scan {
 				Tuple t = new Tuple();
 				t.addColumn(new TupleColumn(idExp.getTableName(), idExp.getColumnName(), group));
 
+				//fuck
+				Tuple fuckTuple = tupleFuckMap.get(group);
+				connection.tupleStack.push(fuckTuple);
+				
 				connection.tupleStack.push(t.copy());
 				connection.funcStack.push(env);
 				nextT = expList.evaluate();
+				connection.tupleStack.push(nextT.copy());
 				FatType hav;
 				if (having != null)
 					hav = having.evaluate();
 				else
 					hav = new FatBoolean(true);
+				connection.tupleStack.pop();
 				connection.funcStack.pop();
 				connection.tupleStack.pop();
+				//fuck
+				connection.tupleStack.pop();
+				
 				if (findExTuple || Log.checkFatBoolean(hav)) {
 					return true;
 				}

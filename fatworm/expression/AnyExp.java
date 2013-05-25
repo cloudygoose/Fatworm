@@ -1,5 +1,6 @@
 package fatworm.expression;
 import fatworm.log.DevelopException;
+import fatworm.log.Log;
 import fatworm.logicplan.*;
 import fatworm.scan.Scan;
 import fatworm.table.Tuple;
@@ -31,6 +32,7 @@ public class AnyExp extends Expression {
 	@Override
 	public FatType evaluate() throws Exception {
 		FatType fo = value.evaluate();
+		//Log.v("anyExp fo: " + fo.getPrint(0));
 		Scan scan = source.getScan();
 		scan.open();
 		while (scan.next()) {
@@ -38,6 +40,7 @@ public class AnyExp extends Expression {
 			if (tuple.size() > 1) 
 				throw new DevelopException();
 			FatType ne = tuple.get(0).getValue();
+			//Log.v("anyExp ne: " + ne.getPrint(0));
 			int res = fo.compareTo(ne);
 			if (res > 0) {
 				if (cop.equals(">")) {

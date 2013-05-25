@@ -19,7 +19,7 @@ public class AsExp extends Expression {
 		return name;
 	}
 	public FatType evaluate() throws Exception {
-		Log.v("AsExp : " + source.getPrint(0));
+		//Log.v("AsExp : " + source.getPrint(0));
 		FatType f = source.evaluate();
 		f.assocHisColName = f.assocColumnName;
 		f.assocColumnName = name;

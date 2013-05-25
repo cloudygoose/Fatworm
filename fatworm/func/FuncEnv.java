@@ -36,6 +36,7 @@ public class FuncEnv {
 	public void accept(Tuple t) throws Exception {
 		FatType group = t.getValueFromIdSW(groupId);
 		//Log.v("accepting tuple : " + t.getPrint());
+		//Log.v("accepting group : " + group.getPrint(0));
 		if (group == null)
 			throw new DevelopException();
 		for (int i = 0;i < funcs.size();i++) {

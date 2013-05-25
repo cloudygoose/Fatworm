@@ -1,5 +1,6 @@
 package fatworm.log;
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -13,9 +14,7 @@ import java.util.LinkedList;
 
 import org.antlr.runtime.tree.CommonTree;
 
-import fatworm.expression.ExpList;
-import fatworm.expression.Expression;
-import fatworm.expression.FuncExp;
+import fatworm.expression.*;
 import fatworm.logicplan.*;
 import fatworm.scan.Scan;
 import fatworm.type.*;

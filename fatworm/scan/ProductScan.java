@@ -11,6 +11,7 @@ public class ProductScan extends Scan{
 	fatworm.driver.Connection connection;
 	Tuple nextT;
 	boolean begins;
+	static public int kk = 0;
 	public Scan getSa() {
 		return sa;
 	}
@@ -59,6 +60,9 @@ public class ProductScan extends Scan{
 		for (int i = 0;i < bb.size();i++) {
 			nextT.addColumn(bb.get(i));
 		}
+		//kk++;
+		//if (kk % 100 == 0)
+		//	Log.v(kk);
 		return true;
 	}
 	@Override

@@ -17,6 +17,10 @@ public class SubqueryExp extends Expression {
 		exp.setConnection(connection);
 		return exp;
 	}
+	@Override
+	public String getPrint(int old) {
+		return padding(old) + "SubqueryExp()\n";
+	}
 	public FatType evaluate() throws Exception {
 		Scan s = plan.getScan();
 		s.open();

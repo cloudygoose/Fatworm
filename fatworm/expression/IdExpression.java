@@ -21,6 +21,9 @@ public class IdExpression extends Expression {
 	public String getColumnName() {
 		return columnName;
 	}
+	public void setColumnName(String s) {
+		columnName = s;
+	}
 	public IdExpression copy() {
 		IdExpression exp = new IdExpression(tableName, columnName);
 		exp.setConnection(connection);
@@ -28,6 +31,12 @@ public class IdExpression extends Expression {
 	}
 	@Override 
 	public FatType evaluate() throws Exception {
+		//Log.v("tupleStack");
+		//for (int i = connection.tupleStack.size() - 1;i >= 0;i--) {
+		//	Log.v(connection.tupleStack.get(i).getPrint());
+		//}
+		
+		
 		for (int i = connection.tupleStack.size() - 1;i >= 0;i--) {
 			Tuple tuple = connection.tupleStack.get(i);
 			FatType f = tuple.getValueFromIdStrong(this);
@@ -44,6 +53,14 @@ public class IdExpression extends Expression {
 				if (tableName.equals("C2") && columnName.equals("country"))
 					Log.v("strongC2.country : " + f.getPrint(0));
 				*/
+				return f;
+			}
+			
+			//fuck
+			f = tuple.getValueFromIdWeak(this);
+			if (f != null) { 
+				f.assocColumnName = columnName;
+				f.assocTableName = tableName;
 				return f;
 			}
 		}

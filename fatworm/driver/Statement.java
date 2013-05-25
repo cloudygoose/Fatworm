@@ -35,6 +35,7 @@ public class Statement implements java.sql.Statement {
 		return connection;
 	}
 	public boolean execute(String sql) {
+		FatOptUtil.ss = 1;
 //		if (sql.charAt(sql.length() - 1) == ';')
 //			sql = sql.substring(0, sql.length() - 1);
 //		Log.v(sql);
@@ -82,7 +83,7 @@ public class Statement implements java.sql.Statement {
 				}
 				
 				Plan p;
-				
+				Log.v("sum2 : " + sum2);
 				p = p2;
 				if (Driver.pushDownSelect && sum1 > sum2 + 50)
 					p = p1;
@@ -109,8 +110,9 @@ public class Statement implements java.sql.Statement {
 					}
 				}
 				//Log.v("Statement : " + p.getPrint(0));
-				
+				//Log.v(p.getPrint(0));
 				scan = p.getScan();
+				Log.v(scan.getPrint(0));
 				if (Driver.logScanTree)
 					Log.v("\n" + scan.getPrint(0));
 				

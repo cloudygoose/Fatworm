@@ -1,4 +1,5 @@
 package fatworm.expression;
+import fatworm.log.Log;
 import fatworm.type.*;
 public class StringLiteral extends Expression{
 	private String s;

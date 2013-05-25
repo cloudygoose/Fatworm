@@ -20,7 +20,7 @@ public class GreaterExp extends Expression {
 	}
 	@Override
 	public FatType evaluate() throws Exception {
-		//Log.v("!!" + left.getPrint(0));
+		//Log.v("GreaterLeft!!" + left.getPrint(0));
 		//Log.v("!!" + left.evaluate().getPrint(0));
 		int co = left.evaluate().compareTo(right.evaluate());
 		if (co > 0)

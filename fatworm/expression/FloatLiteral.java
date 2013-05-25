@@ -1,6 +1,7 @@
 package fatworm.expression;
 import java.math.BigDecimal;
 
+import fatworm.log.Log;
 import fatworm.type.*;
 public class FloatLiteral extends Expression{
 	private BigDecimal number;
