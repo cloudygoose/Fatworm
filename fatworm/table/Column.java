@@ -41,6 +41,12 @@ public class Column implements Serializable {
 	public boolean getAutoIncrement() {
 		return auto_increment;
 	}
+	public FatType getAutoValue() {
+		return autoValue;
+	}
+	public void setAutoValue(FatType tt) {
+		autoValue = tt;
+	}
 	public void setDefault(FatType d) {
 		defa = d;
 	}

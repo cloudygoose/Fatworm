@@ -24,6 +24,8 @@ public class ProjectScan extends Scan {
 		expList = l;
 		exT = null;
 		
+		if (source == null)
+			source = new OneTupleScan(connection);
 		//get EX
 		Scan tmp = source;
 		if (tmp != null)

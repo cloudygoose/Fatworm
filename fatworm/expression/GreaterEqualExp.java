@@ -21,6 +21,8 @@ public class GreaterEqualExp extends Expression {
 	}
 	@Override
 	public FatType evaluate() throws Exception {
+		if (left.evaluate() == null || right.evaluate() == null)
+			return new FatBoolean(false);
 		int b = left.evaluate().compareTo(right.evaluate());
 		if (b >= 0)
 			return new FatBoolean(true);

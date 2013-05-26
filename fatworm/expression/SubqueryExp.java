@@ -25,7 +25,8 @@ public class SubqueryExp extends Expression {
 		Scan s = plan.getScan();
 		s.open();
 		if (!s.next())
-			throw new DevelopException();
+			//throw new DevelopException();
+			return null;
 		Tuple t = s.getTuple();
 		if (t.size() != 1)
 			throw new DevelopException();

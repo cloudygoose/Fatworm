@@ -26,21 +26,27 @@ public class InsertValuesExecutor extends Executor {
 		for (int i = 0;i < values.getChildCount();i++) {
 			CommonTree value = (CommonTree)(values.getChild(i));
 			Column c = table.getSchema().getColumn(i);
-			FatType v;
+			FatType v = null;
 			if (isDefault(value) || isNull(value)) {
 				v = c.getDefault();
 				if (v == null) {
 					if (c.getAutoIncrement()) {
 						v = c.getAutoValueAfterInc();
-					}
-				}
-				if (isNull(value))
+					} else
 					v = c.getType().newNullInstance();
+				}
+//				if (isNull(value))
+//					v = c.getType().newNullInstance();
 			} else
 			{
 				Expression exp = statement.getConnection().logicPlanner.
 						translateExpression(value);
 				v = exp.evaluate();
+			}
+			if (c.getAutoIncrement()) {
+				FatType kk = c.getAutoValue();
+				if (kk.compareTo(v) < 0)
+					c.setAutoValue(v);
 			}
 			//Log.v(v.getPrint(0));
 			tuple.addColumn(new TupleColumn(tableName, c.getName(), 

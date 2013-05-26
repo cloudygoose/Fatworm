@@ -44,6 +44,9 @@ public class Driver implements java.sql.Driver{
 				return tupleColumns.get(i).getValue();
 			2:added a nonsense funcExp to a null FuncList in GroupScan.open()
 			3:IdExpression evluation tupleStack changed
+		bug : 
+		select id, name from student as s where (select id from student where s.name = name and student.malesex = true) >= id and s.malesex = true
+			if subQueryExp don't have a result, return null
 	 */
 	/*
 	 * For test, just run Driver.test() , you need to modify Statement.java

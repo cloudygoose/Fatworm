@@ -67,6 +67,11 @@ public class FatInteger extends FatType implements Serializable {
 			fi.number = ((FatInteger)num).getNumber();
 			return fi;
 		} else
+		if (num instanceof FatFloat) {
+			FatInteger fi = new FatInteger();
+			fi.number = ((FatFloat)num).getNumber().intValue();
+			return fi;
+		} else
 		throw new DevelopException();
 	}
 	@Override
