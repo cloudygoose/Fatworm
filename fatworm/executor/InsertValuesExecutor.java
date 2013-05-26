@@ -56,6 +56,8 @@ public class InsertValuesExecutor extends Executor {
 		table.insert(tuple);
 		ta.indexDealInsertTuple(table.getLastPos(), tuple);
 		table.addTupleNumber(1);
+		//if (tableName.equals("aircraft"))
+		//	Log.v(statement.getConnection().getDatabaseMgr().currentTableMgr.getTable("aircraft").getTupleNumber());
 		//table.next();
 		//Log.v(table.getTuple().getPrint());
 		table.close();

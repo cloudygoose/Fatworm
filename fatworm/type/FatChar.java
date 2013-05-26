@@ -35,6 +35,12 @@ public class FatChar extends FatType implements Serializable {
 		return length + 1;
 	}
 	@Override
+	public FatType newMinInstance() {
+		FatChar varChar = new FatChar(length);
+		varChar.s = "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
+		return varChar;
+	}
+	@Override
 	public FatChar newNullInstance() {
 		FatChar b = new FatChar();
 		b.s = "";
@@ -137,6 +143,10 @@ public class FatChar extends FatType implements Serializable {
 	}
 	@Override
 	public int compareTo(Object o) {
+		//if (s.length() > 3) {
+		//	Log.v(Log.stripStringTail(s.toLowerCase()) + " compare to " + Log.stripStringTail(((FatChar)o).s.toLowerCase()));
+		//	Log.v(Log.stripStringTail(s.toLowerCase()).compareTo(Log.stripStringTail(((FatChar)o).s.toLowerCase())));
+		//}
 		if (o instanceof FatChar)
 			return Log.stripStringTail(s.toLowerCase()).compareTo(Log.stripStringTail(((FatChar)o).s.toLowerCase()));
 		if (o instanceof FatVarChar)

@@ -136,6 +136,76 @@ public class Patterns {
 			return false;
 		}
 	}
+	/* PatternTwoTwo
+	 *                 SOURCE FROM
+                SlotPlan(
+                    SOURCE FROM
+                    ProductPlan(
+                        SlotPlan(
+                            SOURCE FROM
+                            ProductPlan(
+                                SlotPlan(
+                                    SOURCE FROM
+                                    FetchTablePlan(aircraft)
+                                    CONDITION ON
+                                    BNFNULL
+                                )SlotPlan
+                                SlotPlan(
+                                    SOURCE FROM
+                                    FetchTablePlan(airline)
+                                    CONDITION ON
+                                    BNFNULL
+                                )SlotPlan
+                            )Product
+                            CONDITION ON
+                            BNFNULL
+                        )SlotPlan
+                        SlotPlan(
+                            SOURCE FROM
+                            FetchTablePlan(flight)
+                            CONDITION ON
+                            BNFNULL
+                        )SlotPlan
+                    )Product
+                    CONDITION ON
+                    BNFListExp(
+                        EqualExp(
+                            ID:flight.aircraftcode         a2   c2
+                            ID:aircraft.aircraftcode     e1
+                        )Equal
+	 */
+	public static boolean tryPatternTwoTwo(SlotPlan slot) {
+		try {
+			String a2, c2, t2;
+			IdExpression e1;
+			BNFList bnf = slot.getBnf();
+			/*
+			if (bnf.size() != 1)
+				throw new PatternException();
+			*/
+			EqualExp equal = (EqualExp)bnf.get(0);
+			e1 = (IdExpression)equal.getRight();
+			a2 = ((IdExpression)equal.getLeft()).getTableName();
+			c2 = ((IdExpression)equal.getLeft()).getColumnName();
+			ProductPlan product = (ProductPlan)slot.getSource();
+			Plan p1 = product.getSa();
+			FetchTablePlan p2 = (FetchTablePlan)(((SlotPlan)product.getSb()).getSource());
+			Tuple tt = p1.getScan().generateExTuple();
+			if (tt.getValueFromIdSW(e1) == null)
+				throw new PatternException();
+			t2 = p2.getTableName();
+			if (!t2.equals(a2))
+				return false;
+			if (!slot.getConnection().getDatabaseMgr().currentTableMgr.getTable(t2).hasIndexOn(c2))
+				throw new PatternException();
+			//Log.v(a1 + " " + t1 + " " + c1);
+			//Log.v(a2 + " " + t2 + " " + c2);
+			slot.setSource(new PatternTwoPlan(p1, e1, a2, t2, c2, slot.getConnection()));
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 	/* PatternThree
 	 * log : statement : ProjectPlan(
         SlotPlan(
@@ -264,6 +334,7 @@ public class Patterns {
 			Plan ss = project.getSource();
 			order.setSource(ss);
 			project.setSource(order);
+			//Log.v("fuck!!");
 			return project;
 		} catch (Exception e) {
 			return p;

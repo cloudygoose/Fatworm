@@ -52,13 +52,17 @@ public class ProjectScan extends Scan {
 	}
 	@Override
 	public void open() throws Exception {
+		Tuple tt = source.generateExTuple();
 		source.open();
+		//Log.v(source.getPrint(0));
 		funcs = new LinkedList<FuncExp>();
 		firstT = null;
 		Log.getAllFunc(expList, funcs);
-		
+		for (int i = 0;i < funcs.size();i++) {
+			FuncExp func = funcs.get(i);
+			func.setAssocOverallAggregator(null);
+		}
 		if (funcs.size() > 0) {
-			Tuple tt = source.generateExTuple();
 			for (int i = 0;i < funcs.size();i++) {
 				FuncExp func = funcs.get(i);
 				if (func.getAssocOverallAggregator() == null)
@@ -66,9 +70,13 @@ public class ProjectScan extends Scan {
 							tt.getValueFromIdSW(func.getId())));
 				//Log.v(t.getValueFromId(func.getId()).getPrint(0));
 			}
-		
+			//int kk = 0;
+			//Log.v(connection.getDatabaseMgr().currentTableMgr.getTable("aircraft").getTupleNumber());
 			while (source.next()) {
+				//kk++;
+				//Log.v("kk : " + kk);
 				Tuple t = source.getTuple();
+				//Log.v(t.getPrint() + "\n");
 				if (firstT == null)
 					firstT = t;
 				for (int i = 0;i < funcs.size();i++) {

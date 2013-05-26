@@ -95,7 +95,7 @@ public class FatVarChar extends FatType implements Serializable {
 	@Override
 	public FatType newMinInstance() {
 		FatVarChar varChar = new FatVarChar(length);
-		varChar.s = "";
+		varChar.s = "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
 		return varChar;
 	}
 	@Override

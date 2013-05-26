@@ -47,6 +47,7 @@ public class Aggregator {
 		if (token.equals("SUM")) {
 			//Log.v("!!sum!!");
 			sum = sum.computeAdd(f);
+			//Log.v("Agg : " + sum.getPrint(0));
 		}
 	}
 	public FatType getValue() throws Exception {

@@ -12,7 +12,7 @@ public class FatFloat extends FatType implements Serializable {
 	private BigDecimal number;
 	public FatFloat() {
 		super();
-		number = new BigDecimal(0);
+		number = new BigDecimal("0.0");
 	}
 	public FatFloat(BigDecimal num) {
 		super();

@@ -62,6 +62,9 @@ public class Table implements Serializable {
 	public String getName() {
 		return name;
 	}
+	public int getTupleNumber() {
+		return this.tuplesNum;
+	}
 	public void setConnection(fatworm.driver.Connection c) {
 		connection = c;
 		setFile();

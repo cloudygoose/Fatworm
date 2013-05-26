@@ -32,7 +32,15 @@ public class LogicPlanner extends PlanTranslater{
 		throw new SQLException();
 	}
 	Plan translateSelectDistinct(CommonTree tr) throws Exception {
-		return new DistinctPlan(translateSelect(tr), connection);
+		DistinctPlan plan = new DistinctPlan(translateSelect(tr), connection);
+		if (plan.getSource() instanceof OrderPlan) {
+			OrderPlan order = ((OrderPlan)plan.getSource());
+			Plan son = order.getSource();
+			plan.setSource(son);
+			order.setSource(plan);
+			return order;
+		}
+		return plan;
 		//NOTE:if we have a order by primary key then the distinct is done easily
 	}
 	/*
@@ -80,7 +88,7 @@ public class LogicPlanner extends PlanTranslater{
 			ArrayList<Boolean> ascs = new ArrayList<Boolean>();
 			for (int i = 0;i < orderTree.getChildCount();i++) {
 				CommonTree orderClause = (CommonTree)orderTree.getChild(i);
-				Boolean asc; Expression id;
+				Boolean asc = true; Expression id;
 				if (isAsc(orderClause)) {
 					asc = true;
 					id = translateExpression((CommonTree)(orderClause.getChild(0)));
