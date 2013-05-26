@@ -1,6 +1,7 @@
 package fatworm.type;
 import fatworm.expression.*;
 import fatworm.log.*;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 public class FatVarChar extends FatType implements Serializable {
@@ -90,6 +91,12 @@ public class FatVarChar extends FatType implements Serializable {
 		FatVarChar c = new FatVarChar(length);
 		c.s = "";
 		return c;
+	}
+	@Override
+	public FatType newMinInstance() {
+		FatVarChar varChar = new FatVarChar(length);
+		varChar.s = "";
+		return varChar;
 	}
 	@Override
 	public String getPrint(int old) {

@@ -59,6 +59,7 @@ public class FatType implements Comparable, Serializable {
 		throw new DevelopException();
 	}
 	public FatType newMinInstance() {
+		Log.v(this.toString());
 		throw new DevelopException();
 	}
 	public FatType newInstance(int num) {
