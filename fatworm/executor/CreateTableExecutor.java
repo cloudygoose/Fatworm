@@ -37,7 +37,7 @@ public class CreateTableExecutor extends Executor {
 			Column c = newTable.getSchema().getColumn(i);
 			if (c.getType() instanceof FatTimeStamp || c.getType() instanceof FatDateTime || c.getType() instanceof FatDecimal)
 				continue;
-			if (c.getType().getByteArrayLength() < 80) {
+			if (c.getType().getByteArrayLength() < 80 || c.getType().getByteArrayLength() == 505) {
 				newTable.createIndex(c.getName(), c.getName());
 				//Log.v("CreateTableExe : " + newTable.getName() + " " +  c.getName());
 			}			

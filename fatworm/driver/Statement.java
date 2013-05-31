@@ -36,7 +36,7 @@ public class Statement implements java.sql.Statement {
 	}
 	public boolean execute(String sql) {
 		FatOptUtil.ss = 1;
-		//Log.v("sql : " + sql);
+//		Log.v("sql : " + sql);
 //		if (sql.charAt(sql.length() - 1) == ';')
 //			sql = sql.substring(0, sql.length() - 1);
 //		Log.v(sql);
@@ -112,9 +112,14 @@ public class Statement implements java.sql.Statement {
 						if (Patterns.tryPatternTwoTwo(slots.get(i))) {
 							//Log.v("Pattern22 opted!!");
 							bb = true;
+						} else
+						if (Patterns.tryPatternTwoThree(slots.get(i))) {
+							//Log.v("Pattern22 opted!!");
+							bb = true;
 						}
 					}
 				}
+				//Log.v(bb);
 				//Log.v("Statement : " + p.getPrint(0));
 				//Log.v(p.getPrint(0));
 				scan = p.getScan();

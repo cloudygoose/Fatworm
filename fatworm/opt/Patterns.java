@@ -206,6 +206,41 @@ public class Patterns {
 			return false;
 		}
 	}
+	/*
+	 * exchange the operators of = expression
+	 */
+	public static boolean tryPatternTwoThree(SlotPlan slot) {
+		try {
+			String a2, c2, t2;
+			IdExpression e1;
+			BNFList bnf = slot.getBnf();
+			/*
+			if (bnf.size() != 1)
+				throw new PatternException();
+			*/
+			EqualExp equal = (EqualExp)bnf.get(0);
+			e1 = (IdExpression)equal.getLeft();
+			a2 = ((IdExpression)equal.getRight()).getTableName();
+			c2 = ((IdExpression)equal.getRight()).getColumnName();
+			ProductPlan product = (ProductPlan)slot.getSource();
+			Plan p1 = product.getSa();
+			FetchTablePlan p2 = (FetchTablePlan)(((SlotPlan)product.getSb()).getSource());
+			Tuple tt = p1.getScan().generateExTuple();
+			if (tt.getValueFromIdSW(e1) == null)
+				throw new PatternException();
+			t2 = p2.getTableName();
+			if (!t2.equals(a2))
+				return false;
+			if (!slot.getConnection().getDatabaseMgr().currentTableMgr.getTable(t2).hasIndexOn(c2))
+				throw new PatternException();
+			//Log.v(a1 + " " + t1 + " " + c1);
+			//Log.v(a2 + " " + t2 + " " + c2);
+			slot.setSource(new PatternTwoPlan(p1, e1, a2, t2, c2, slot.getConnection()));
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 	/* PatternThree
 	 * log : statement : ProjectPlan(
         SlotPlan(

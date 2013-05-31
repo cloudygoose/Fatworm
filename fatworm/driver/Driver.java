@@ -47,6 +47,8 @@ public class Driver implements java.sql.Driver{
 		bug : 
 		select id, name from student as s where (select id from student where s.name = name and student.malesex = true) >= id and s.malesex = true
 			if subQueryExp don't have a result, return null
+	 	index :
+	 	create index on 505 byte column
 	 */
 	/*
 	 * For test, just run Driver.test() , you need to modify Statement.java
