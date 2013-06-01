@@ -1261,5 +1261,14 @@ public class ResultSet implements java.sql.ResultSet {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public <T> T getObject(String columnLabel, Class<T> type)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

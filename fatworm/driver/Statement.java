@@ -492,4 +492,12 @@ public class Statement implements java.sql.Statement {
 		// TODO Auto-generated method stub
 		
 	}
+	public void closeOnCompletion() throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+	public boolean isCloseOnCompletion() throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

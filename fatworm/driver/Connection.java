@@ -21,6 +21,7 @@ import fatworm.log.Log;
 import fatworm.parser.ParserManager;
 import fatworm.planner.LogicPlanner;
 import java.util.*;
+import java.util.concurrent.Executor;
 
 import fatworm.storage.*;
 import fatworm.table.*;
@@ -359,5 +360,26 @@ public class Connection implements java.sql.Connection{
 	public void setTypeMap(Map<String, Class<?>> arg0) throws SQLException {
 		// TODO Auto-generated method stub
 		
+	}
+	public void setSchema(String schema) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+	public String getSchema() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void abort(Executor executor) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setNetworkTimeout(Executor executor, int milliseconds)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+	public int getNetworkTimeout() throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

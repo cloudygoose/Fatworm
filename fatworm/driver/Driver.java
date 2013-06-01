@@ -16,6 +16,7 @@ import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.*;
 
 import fatworm.executor.*;
@@ -32,6 +33,8 @@ import fatworm.index.*;
 import fatworm.type.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Logger;
+
 import fatworm.index.*;
 public class Driver implements java.sql.Driver{
 	/*
@@ -242,5 +245,10 @@ public class Driver implements java.sql.Driver{
 	public boolean jdbcCompliant() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
